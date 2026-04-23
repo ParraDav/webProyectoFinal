@@ -1,0 +1,19 @@
+
+<style>
+ .styled-box {
+  color: black;
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
+  border-radius: 5%;
+  border: 1px solid black;
+  padding: 10px;
+  display: inline-block;
+}
+
+</style>
+<header><h1 class="styled-box">Steven estuvo aquí</h1></header>
+
+
+<p class="styled-box">{{alias}}</p>
+<input type="text"[(ngModel)]="alias">
+<router-outlet />
