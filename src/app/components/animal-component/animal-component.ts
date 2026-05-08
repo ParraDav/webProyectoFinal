@@ -1,4 +1,3 @@
-imports: [CommonModule],
 import { Component } from '@angular/core';
 import { AnimalService } from '../../services/animal-service';
 
@@ -11,18 +10,14 @@ import { AnimalService } from '../../services/animal-service';
 export class AnimalComponent {
   animalList: any = [];
 
-  constructor(private cd: ChangeDetectorRef) { }
+  constructor(private animalService: AnimalService) { }
 
   getAllAnimals() {
     this.animalService.getAllAnimalsData().subscribe((data: {}) => {
       this.animalList = data;
-      this.cd.detectChanges();
     });
   }
   ngOnInit() {
-    this.getAllAnimals();
-  }
-  ngOnChanges() {
     this.getAllAnimals();
   }
 }
