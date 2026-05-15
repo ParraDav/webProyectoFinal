@@ -1,62 +1,113 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { AnimalService } from '../../services/animal-service';
 import { take } from 'rxjs';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef } from '@angular/core';
-
 
 @Component({
   selector: 'app-animal-component',
-  imports: [CommonModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './animal-component.html',
-  styleUrl: './animal-component.css',
+  styleUrls: ['./animal-component.css'],
 })
 export class AnimalComponent {
-  animalList: any = [];
-  animalForm: FormGroup | any;
+  animalList: any[] = [];
+  animalForm!: FormGroup;
+  idAnimal!: number;
+  editableAnimal: boolean = false;
 
-  constructor(private cd: ChangeDetectorRef, private animalService: AnimalService,
+  constructor(
+    private cd: ChangeDetectorRef,
+    private animalService: AnimalService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService
+  ) { }
 
-  getAllAnimals() {
-    this.animalService.getAllAnimalsData().subscribe((data: {}) => {
-      this.animalList = data;
-      this.cd.detectChanges();
-    });
-  }
   ngOnInit() {
     this.animalForm = this.formBuilder.group({
       nombre: '',
       edad: 0,
-      tipo: ''
+      tipo: '',
     });
-  }
-  ngOnChanges() {
+
     this.getAllAnimals();
   }
-  newMessage(messageText: string) {
-    this.toastr.success('Clic aquí para actualizar la lista', messageText)
-      .onTap
-      .pipe(take(1))
-      .subscribe(() => window.location.reload());
+
+  getAllAnimals() {
+    this.animalService.getAllAnimalsData().subscribe((data: any) => {
+      this.animalList = data;
+      this.cd.detectChanges();
+    });
   }
+
   newAnimalEntry() {
-    this.animalService.newAnimal(this.animalForm.value).subscribe(
+    this.animalService.newAnimal(this.animalForm.value).subscribe(() => {
+      this.router.navigate(['/inicio']).then(() => {
+        this.newMessage('Registro exitoso');
+        this.getAllAnimals();
+        this.animalForm.reset({
+          nombre: '',
+          edad: 0,
+          tipo: '',
+        });
+      });
+    });
+  }
+
+  toggleEditAnimal(id: number) {
+    this.idAnimal = id;
+    this.editableAnimal = !this.editableAnimal;
+
+    this.animalService.getOneAnimal(id).subscribe((data: any) => {
+      this.animalForm.patchValue({
+        nombre: data.nombre,
+        edad: data.edad,
+        tipo: data.tipo,
+      });
+    });
+  }
+
+  updateAnimalEntry() {
+    const filteredData: any = {};
+
+    for (let key in this.animalForm.value) {
+      if (
+        this.animalForm.value[key] !== '' &&
+        this.animalForm.value[key] !== null
+      ) {
+        filteredData[key] = this.animalForm.value[key];
+      }
+    }
+
+    this.animalService
+      .updateAnimal(this.idAnimal, filteredData)
+      .subscribe(() => {
+        this.newMessage('Animal editado');
+        this.getAllAnimals();
+        this.editableAnimal = false;
+      });
+  }
+
+  newMessage(messageText: string) {
+    this.toastr
+      .success('Clic aquí para actualizar la lista', messageText)
+      .onTap.pipe(take(1))
+      .subscribe(() => {
+        this.getAllAnimals();
+      });
+  }
+  deleteAnimalEntry(id: any) {
+    console.log(id)
+    this.animalService.deleteAnimal(id).subscribe(
       () => {
-        //Redirigiendo a la ruta actual /inicio y recargando la ventana
-        this.router.navigate(['/inicio'])
-          .then(() => {
-            this.newMessage('Registro exitoso');
-          })
+        //Enviando mensaje de confirmación
+        this.newMessage("Animal eliminado");
       }
     );
   }
 
 
 }
-
