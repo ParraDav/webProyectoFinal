@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Micomponente } from './micomponente';
+import { Register } from './register';
 
-describe('Micomponente', () => {
-  let component: Micomponente;
-  let fixture: ComponentFixture<Micomponente>;
+describe('Register', () => {
+  let component: Register;
+  let fixture: ComponentFixture<Register>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Micomponente],
+      imports: [Register],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Micomponente);
+    fixture = TestBed.createComponent(Register);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
