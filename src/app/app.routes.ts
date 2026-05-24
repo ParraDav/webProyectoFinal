@@ -4,7 +4,7 @@ import { Home} from './components/home/home';
 import { Login } from './components/login/login';
 import { Register} from './components/register/register';
 import { Cursos } from './components/cursos/cursos';
-
+import { VerCurso } from './components/ver-curso/ver-curso';
 export const routes: Routes = [
 
     {
@@ -25,6 +25,11 @@ export const routes: Routes = [
     {
         path:'cursos',
         component: Cursos
+    },
+
+    {
+        path:'ver-curso/:id',
+        component: VerCurso
     },
 
     {
