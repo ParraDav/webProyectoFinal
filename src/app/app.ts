@@ -9,6 +9,6 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('webzoologico');
+  protected readonly title = signal('webProyectoFinal');
   alias=""
 }
