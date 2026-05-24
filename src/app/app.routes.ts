@@ -1,40 +1,40 @@
 import { Routes } from '@angular/router';
 
-import { Home} from './components/home/home';
+import { Home } from './components/home/home';
 import { Login } from './components/login/login';
-import { Register} from './components/register/register';
+import { Register } from './components/register/register';
 import { Cursos } from './components/cursos/cursos';
 import { VerCurso } from './components/ver-curso/ver-curso';
 export const routes: Routes = [
 
     {
-        path:'',
+        path: '',
         component: Home
     },
 
     {
-        path:'login',
+        path: 'login',
         component: Login
     },
 
     {
-        path:'register',
-        component: Register    
+        path: 'register',
+        component: Register
     },
 
     {
-        path:'cursos',
+        path: 'cursos',
         component: Cursos
     },
 
     {
-        path:'ver-curso/:id',
+        path: 'ver-curso/:id',
         component: VerCurso
     },
 
     {
-        path:'**',
-        redirectTo:''
+        path: '**',
+        redirectTo: ''
     }
 
 ];
