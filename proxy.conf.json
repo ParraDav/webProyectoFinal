@@ -1,5 +1,5 @@
 {
-    "/api/animals": {
+    "/api/proyectoFinal": {
         "target": "http://localhost:3300",
         "secure": false,
         "changeOrigin": false

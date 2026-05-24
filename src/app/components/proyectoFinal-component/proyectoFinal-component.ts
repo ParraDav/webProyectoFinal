@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { AnimalService } from '../../services/proyectoFinal-service';
+import { proyectoFinalService } from '../../services/proyectoFinal-service';
 import { take } from 'rxjs';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -7,12 +7,13 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-animal-component',
+  selector: 'app-proyectoFinal-component',
   imports: [ReactiveFormsModule, CommonModule],
-  templateUrl: './animal-component.html',
-  styleUrls: ['./animal-component.css'],
+  templateUrl: './proyectoFinal-component.html',
+  styleUrls: ['./proyectoFinal-component.css'],
 })
-export class AnimalComponent {
+//lo que diga "animal" revisarlo
+export class proyectoFinalComponent {
   animalList: any[] = [];
   animalForm!: FormGroup;
   idAnimal!: number;
@@ -20,7 +21,7 @@ export class AnimalComponent {
 
   constructor(
     private cd: ChangeDetectorRef,
-    private animalService: AnimalService,
+    private animalService: proyectoFinalService,
     private formBuilder: FormBuilder,
     private router: Router,
     private toastr: ToastrService

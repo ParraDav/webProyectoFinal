@@ -6,10 +6,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Injectable({
   providedIn: 'root',
 })
-export class AnimalService {
+export class proyectoFinalService {
   constructor(private http: HttpClient) { }
-  apiUri = '/api/animals';
+  apiUri = '/api/proyectoFinal';
   httpOptions = new HttpHeaders().set('Content-Type', 'application/json');
+
+  //modificar los metodos de animals a otra cosa
   getAllAnimalsData(): Observable<any> {
     return this.http.get<any>(this.apiUri)
   }
