@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { AnimalService } from '../../services/animal-service';
+import { AnimalService } from '../../services/proyectoFinal-service';
 import { take } from 'rxjs';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';

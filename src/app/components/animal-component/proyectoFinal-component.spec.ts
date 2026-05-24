@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AnimalComponent } from './animal-component';
+import { AnimalComponent } from './proyectoFinal-component';
 
 describe('AnimalComponent', () => {
   let component: AnimalComponent;
