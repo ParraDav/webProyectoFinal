@@ -1,19 +1,49 @@
 <app-navbar></app-navbar>
 
-<div class="register-container">
+<div class="container">
 
-    <form class="register-form">
+    <h2>Registro</h2>
 
-        <h2>Crear Cuenta</h2>
+    <form [formGroup]="registerForm">
 
-        <input type="text" placeholder="Nombre">
+        <div>
+            <label>Nombre</label>
 
-        <input type="email" placeholder="Correo">
+            <input type="text" formControlName="nombre">
+        </div>
 
-        <input type="password" placeholder="Contraseña">
+        <div>
+            <label>Email</label>
 
-        <button type="submit">
+            <input type="email" formControlName="email">
+        </div>
+
+        <div>
+            <label>Password</label>
+
+            <input type="password" formControlName="password">
+        </div>
+
+        <div>
+            <label>Rol</label>
+
+            <select formControlName="rol">
+
+                <option value="estudiante">
+                    Estudiante
+                </option>
+
+                <option value="instructor">
+                    Instructor
+                </option>
+
+            </select>
+        </div>
+
+        <button type="button" (click)="register()">
+
             Registrarse
+
         </button>
 
     </form>
