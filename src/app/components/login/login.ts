@@ -4,7 +4,7 @@ import {
   FormGroup,
   ReactiveFormsModule
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth-service';
 
@@ -13,12 +13,12 @@ import { AuthService } from '../../services/auth-service';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-
 export class Login {
 
   loginForm!: FormGroup;
@@ -30,52 +30,24 @@ export class Login {
   ) { }
 
   ngOnInit() {
-
     this.loginForm = this.fb.group({
-
       email: [''],
       password: ['']
-
     });
-
   }
 
   login() {
-
     this.authService
       .login(this.loginForm.value)
       .subscribe({
-
         next: (res: any) => {
-
-          console.log(res);
-
-          // Guardar token
-          localStorage.setItem(
-            'token',
-            res.token
-          );
-
-          // Guardar rol
-          localStorage.setItem(
-            'rol',
-            res.rol
-          );
-
-          alert('Login exitoso');
-
+          localStorage.setItem('token', res.token);
+          localStorage.setItem('rol', res.rol);
           this.router.navigate(['/cursos']);
-
         },
-
-        error: (err) => {
-
-          console.log(err);
-
+        error: () => {
           alert('Credenciales incorrectas');
-
         }
-
       });
   }
 }

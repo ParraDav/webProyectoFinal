@@ -1,41 +1,62 @@
 <div class="curso-container">
 
-    <div class="curso-card">
+    <div *ngIf="cargando" class="loading">
+        Cargando curso...
+    </div>
 
-        <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4">
+    <div *ngIf="!cargando && !curso" class="error">
+        Curso no encontrado.
+    </div>
+
+    <div class="curso-card" *ngIf="!cargando && curso">
+
+        <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4" [alt]="curso.nombre">
 
         <div class="curso-info">
 
-            <h1>Curso de Angular</h1>
+            <h1>{{ curso.nombre }}</h1>
 
-            <p class="descripcion">
-
-                Aprende Angular desde cero y crea aplicaciones modernas
-                conectadas con APIs y MongoDB.
-
-            </p>
+            <p class="descripcion">{{ curso.descripcion }}</p>
 
             <div class="details">
 
                 <p>
                     <strong>Instructor:</strong>
-                    Juan Pérez
+                    {{ curso.instructor?.nombre || 'No disponible' }}
                 </p>
 
-                <p>
+                <p *ngIf="curso.duracion">
                     <strong>Duración:</strong>
-                    40 Horas
+                    {{ curso.duracion }}
+                </p>
+
+                <p *ngIf="curso.prerequisito">
+                    <strong>Prerrequisito:</strong>
+                    {{ curso.prerequisito }}
+                </p>
+
+                <p *ngIf="curso.edadMinima && curso.edadMinima > 0">
+                    <strong>Edad mínima:</strong>
+                    {{ curso.edadMinima }} años
                 </p>
 
                 <p>
-                    <strong>Nivel:</strong>
-                    Intermedio
+                    <strong>Módulos:</strong>
+                    {{ curso.modulos?.length || 0 }}
                 </p>
 
             </div>
 
-            <button>
-                Inscribirse
+            <div *ngIf="mensajeExito" class="alert alert-success">
+                {{ mensajeExito }}
+            </div>
+
+            <div *ngIf="mensajeError" class="alert alert-error">
+                {{ mensajeError }}
+            </div>
+
+            <button class="btn-inscribir" (click)="inscribirse()" [disabled]="inscribiendo || !!mensajeExito">
+                {{ inscribiendo ? 'Procesando...' : 'Inscribirse' }}
             </button>
 
         </div>

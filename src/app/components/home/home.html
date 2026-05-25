@@ -1,83 +1,36 @@
-
 <section class="hero">
-
     <div class="hero-content">
-
         <h1>Aprende desde cualquier lugar</h1>
-
-        <p>
-            Plataforma de cursos online con Angular, Node.js y MongoDB
-        </p>
-
-        <button class="btn">
-            Explorar Cursos
-        </button>
-
+        <p>Plataforma de cursos online con Angular, Node.js y MongoDB</p>
+        <button class="btn" routerLink="/cursos">Explorar Cursos</button>
     </div>
-
 </section>
 
 <section class="courses">
 
-    <h2 class="section-title">
-        Cursos Destacados
-    </h2>
+    <h2 class="section-title">Cursos Destacados</h2>
 
-    <div class="course-container">
+    <div *ngIf="cargando" class="loading">
+        Cargando cursos...
+    </div>
 
-        <div class="course-card">
+    <div *ngIf="!cargando && cursos.length === 0" class="empty">
+        No hay cursos disponibles por el momento.
+    </div>
 
-            <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4">
+    <div class="course-container" *ngIf="!cargando && cursos.length > 0">
 
-            <div class="course-info">
+        <div class="course-card" *ngFor="let curso of cursos">
 
-                <h3>Angular</h3>
-
-                <p>
-                    Aprende Angular desde cero.
-                </p>
-
-                <button class="btn">
-                    Ver Curso
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="course-card">
-
-            <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c">
+            <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4" [alt]="curso.nombre">
 
             <div class="course-info">
 
-                <h3>Node.js</h3>
+                <h3>{{ curso.nombre }}</h3>
 
-                <p>
-                    Aprende Backend profesional.
-                </p>
+                <p>{{ curso.descripcion }}</p>
 
-                <button class="btn">
-                    Ver Curso
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="course-card">
-
-            <img src="https://images.unsplash.com/photo-1542831371-d531d36971e6">
-
-            <div class="course-info">
-
-                <h3>MongoDB</h3>
-
-                <p>
-                    Domina bases de datos NoSQL.
-                </p>
-
-                <button class="btn">
+                <button class="btn" [routerLink]="['/ver-curso', curso._id]">
                     Ver Curso
                 </button>
 
@@ -90,9 +43,5 @@
 </section>
 
 <footer>
-
-    <p>
-        © 2026 CursosOnline
-    </p>
-
+    <p>© 2026 CursosOnline</p>
 </footer>
