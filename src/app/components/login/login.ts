@@ -1,24 +1,17 @@
 import { Component } from '@angular/core';
-
-import { Navbar } from '../navbar/navbar';
-
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule
 } from '@angular/forms';
-
 import { Router } from '@angular/router';
-
 import { CommonModule } from '@angular/common';
-
 import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
-    Navbar,
     ReactiveFormsModule,
     CommonModule
   ],

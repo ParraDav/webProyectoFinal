@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { Navbar } from '../navbar/navbar';
-
 import {
   FormBuilder,
   FormGroup,
@@ -8,16 +6,13 @@ import {
 } from '@angular/forms';
 
 import { Router } from '@angular/router';
-
 import { CommonModule } from '@angular/common';
-
 import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
-    Navbar,
     ReactiveFormsModule,
     CommonModule
   ],
