@@ -1,42 +1,33 @@
+<<<<<<< HEAD
 <div class="container">
+=======
+<app-navbar></app-navbar>
 
-    <h2>Registro</h2>
+<div class="register-container">
+>>>>>>> origin/main
 
-    <form [formGroup]="registerForm">
+    <form class="register-form" [formGroup]="registerForm">
 
-        <div>
-            <label>Nombre</label>
+        <h2>Registro</h2>
 
-            <input type="text" formControlName="nombre">
-        </div>
+        <input type="text" placeholder="Nombre" formControlName="nombre">
 
-        <div>
-            <label>Email</label>
+        <input type="email" placeholder="Email" formControlName="email">
 
-            <input type="email" formControlName="email">
-        </div>
+        <input type="password" placeholder="Password" formControlName="password">
 
-        <div>
-            <label>Password</label>
+        <select formControlName="rol">
 
-            <input type="password" formControlName="password">
-        </div>
+            <option value="estudiante">
+                Estudiante
+            </option>
 
-        <div>
-            <label>Rol</label>
+            <option value="instructor">
+                Instructor
+            </option>
 
-            <select formControlName="rol">
+        </select>
 
-                <option value="estudiante">
-                    Estudiante
-                </option>
-
-                <option value="instructor">
-                    Instructor
-                </option>
-
-            </select>
-        </div>
 
         <button type="button" (click)="register()">
 

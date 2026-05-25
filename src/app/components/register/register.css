@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .container{
     height:90vh;
     display:flex;
@@ -12,11 +13,28 @@
     padding:35px;
     border-radius:12px;
     box-shadow:0 5px 15px rgba(0,0,0,.1);
-
-    display:flex;
-    flex-direction:column;
+=======
+.register-container {
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5f7fb;
 }
 
+.register-form {
+    width: 380px;
+    background: white;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .1);
+>>>>>>> origin/main
+
+    display: flex;
+    flex-direction: column;
+}
+
+<<<<<<< HEAD
 .form h2{
     text-align:center;
     margin-bottom:25px;
@@ -27,17 +45,36 @@
     padding:12px;
     border:1px solid #ccc;
     border-radius:8px;
+=======
+.register-form h2 {
+    text-align: center;
+    margin-bottom: 25px;
 }
 
-.register-form button{
-    padding:12px;
-    border:none;
-    background:#38bdf8;
-    color:white;
-    border-radius:8px;
-    cursor:pointer;
+.register-form input {
+    margin-bottom: 15px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+>>>>>>> origin/main
 }
 
-.register-form button:hover{
-    background:#0ea5e9;
+.register-form button {
+    padding: 12px;
+    border: none;
+    background: #38bdf8;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.register-form button:hover {
+    background: #0ea5e9;
+}
+
+.register-form select {
+    margin-bottom: 15px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
 }
