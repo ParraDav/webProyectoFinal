@@ -1,50 +1,27 @@
-<app-navbar></app-navbar>
-
 <div class="courses-page">
 
     <h1>Todos los Cursos</h1>
 
     <div class="courses-grid">
 
-        <div class="course-card">
+        <div class="course-card" *ngFor="let curso of cursos">
 
             <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4">
 
             <div class="course-content">
 
-                <h2>Angular</h2>
+                <h2>
+                    {{curso.nombre}}
+                </h2>
 
                 <p>
-                    Aprende Angular desde cero.
+                    {{curso.descripcion}}
                 </p>
 
-                <button>
-                    Ver Más
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="course-card">
-
-            <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c">
-
-            <div class="course-content">
-
-                <h2>Node.js</h2>
-
-                <p>
-                    Aprende Backend moderno.
-                </p>
-
-                <!--   <button [routerLink]="['/curso', curso._id]">
+                <button [routerLink]="['/ver-curso', curso._id]">
                     Ver Curso
                 </button>
-            -->
-                <button [routerLink]="['/curso', 1]">
-                    Ver Curso
-                </button>
+
             </div>
 
         </div>

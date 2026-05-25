@@ -1,4 +1,4 @@
-.register-container{
+.container{
     height:90vh;
     display:flex;
     justify-content:center;
@@ -6,7 +6,7 @@
     background:#f5f7fb;
 }
 
-.register-form{
+.form{
     width:380px;
     background:white;
     padding:35px;
@@ -17,12 +17,12 @@
     flex-direction:column;
 }
 
-.register-form h2{
+.form h2{
     text-align:center;
     margin-bottom:25px;
 }
 
-.register-form input{
+.form input{
     margin-bottom:15px;
     padding:12px;
     border:1px solid #ccc;
