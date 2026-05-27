@@ -15,66 +15,106 @@
     <a routerLink="/cursos" class="btn btn-primary">Ver todos los cursos</a>
   </div>
 
-  <!-- Course content -->
+  <!-- ══ COURSE CONTENT ══════════════════════════════════ -->
   <div *ngIf="!cargando && curso" class="animate-fade-up">
 
-    <!-- Hero del curso -->
+    <!-- ── Hero ──────────────────────────────────────── -->
     <div class="course-hero">
       <div class="course-hero-bg"></div>
       <div class="container course-hero-content">
-        <a routerLink="/cursos" class="back-link">
-          ← Volver a cursos
-        </a>
+
+        <a routerLink="/cursos" class="back-link">← Volver a cursos</a>
+
         <div class="course-hero-body">
+          <!-- Info -->
           <div class="course-hero-info">
-            <span class="badge badge-success">Publicado</span>
-            <h1>{{ curso.nombre }}</h1>
-            <p class="course-desc">{{ curso.descripcion }}</p>
-            <div class="course-meta">
-              <span class="meta-pill">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                </svg>
-                {{ curso.instructor?.nombre || 'Instructor' }}
-              </span>
-              <span class="meta-pill">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
-                </svg>
-                {{ curso.modulos?.length || 0 }} módulos
-              </span>
+
+            <!-- Editar Curso (modo formulario) -->
+            <div *ngIf="editandoCurso && canManage" class="edit-curso-form glass">
+              <h3>Editar Curso</h3>
+              <div class="field-group">
+                <label>Nombre</label>
+                <input type="text" class="input-field" [(ngModel)]="cursoEdit.nombre" placeholder="Nombre del curso"/>
+              </div>
+              <div class="field-group">
+                <label>Descripción</label>
+                <textarea class="input-field" rows="3" [(ngModel)]="cursoEdit.descripcion" placeholder="Descripción"></textarea>
+              </div>
+              <div class="field-group">
+                <label>Estado</label>
+                <select class="input-field" [(ngModel)]="cursoEdit.estado">
+                  <option value="borrador">Borrador</option>
+                  <option value="publicado">Publicado</option>
+                </select>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-primary" (click)="guardarCurso()" [disabled]="guardandoCurso">
+                  <span *ngIf="!guardandoCurso">Guardar cambios</span>
+                  <span *ngIf="guardandoCurso" class="spinner-wrap"><span class="spinner"></span></span>
+                </button>
+                <button class="btn btn-outline" (click)="editandoCurso = false">Cancelar</button>
+              </div>
             </div>
+
+            <!-- Vista normal del curso -->
+            <ng-container *ngIf="!editandoCurso">
+              <span class="badge badge-success">{{ curso.estado }}</span>
+              <h1>{{ curso.nombre }}</h1>
+              <p class="course-desc">{{ curso.descripcion }}</p>
+              <div class="course-meta">
+                <span class="meta-pill">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  {{ curso.instructor?.nombre || 'Instructor' }}
+                </span>
+                <span class="meta-pill">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+                  </svg>
+                  {{ curso.modulos?.length || 0 }} módulos
+                </span>
+              </div>
+
+              <!-- Toolbar Instructor/Admin -->
+              <div class="manage-toolbar" *ngIf="canManage">
+                <button class="btn btn-outline btn-sm" (click)="abrirEditarCurso()">
+                  ✏️ Editar curso
+                </button>
+                <button class="btn btn-sm" style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3)" (click)="verInscritos()">
+                  👥 Ver inscritos
+                </button>
+                <button class="btn btn-danger btn-sm" (click)="eliminarCurso()">
+                  🗑️ Eliminar
+                </button>
+              </div>
+            </ng-container>
+
           </div>
 
-          <!-- Enroll card -->
+          <!-- ── Enroll card ─────────────────────────── -->
           <div class="enroll-card glass">
             <div class="enroll-icon">📖</div>
             <h3>Comienza a aprender</h3>
             <p>Accede a todos los módulos del curso y avanza a tu ritmo.</p>
 
-            <!-- Estudiante no inscrito o sin login -->
             <ng-container *ngIf="!inscrito && (isEstudiante || !isLoggedIn)">
               <button class="btn btn-primary btn-lg enroll-btn"
-                (click)="inscribirse()"
-                [disabled]="inscribiendo">
+                (click)="inscribirse()" [disabled]="inscribiendo">
                 <span *ngIf="!inscribiendo">🚀 Inscribirse gratis</span>
-                <span *ngIf="inscribiendo" class="spinner-wrap">
-                  <span class="spinner"></span> Procesando...
-                </span>
+                <span *ngIf="inscribiendo" class="spinner-wrap"><span class="spinner"></span> Procesando...</span>
               </button>
             </ng-container>
 
-            <!-- Ya inscrito o completado -->
             <div *ngIf="inscrito" class="enrolled-badge">
               <span>✅ Estás inscrito</span>
             </div>
 
-            <!-- Instructor/Admin -->
             <div *ngIf="canManage" class="manage-hint">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16">
                 <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
               </svg>
-              Eres el instructor de este curso
+              Modo instructor — gestiona el contenido
             </div>
           </div>
 
@@ -82,63 +122,128 @@
       </div>
     </div>
 
-    <!-- Main layout -->
+    <!-- ── Main layout ─────────────────────────────── -->
     <div class="container course-layout">
 
-      <!-- Modules list -->
+      <!-- Modules section -->
       <div class="modules-section">
+
         <div class="modules-header">
           <h2>Contenido del curso</h2>
-          <!-- Progress bar (solo estudiante inscrito) -->
-          <div class="progress-info" *ngIf="inscrito && isEstudiante && curso.modulos?.length">
-            <span class="progress-label">{{ progreso }}% completado</span>
-            <div class="progress-wrap">
-              <div class="progress-fill" [style.width.%]="progreso"></div>
+
+          <div class="modules-header-right">
+            <!-- Progress (Estudiante inscrito) -->
+            <div class="progress-info" *ngIf="inscrito && isEstudiante && curso.modulos?.length">
+              <span class="progress-label">{{ progreso }}% completado</span>
+              <div class="progress-wrap">
+                <div class="progress-fill" [style.width.%]="progreso"></div>
+              </div>
             </div>
+            <!-- Agregar módulo (Instructor) -->
+            <button *ngIf="canManage && !mostrarFormModulo" class="btn btn-primary btn-sm" (click)="abrirAgregarModulo()">
+              + Agregar módulo
+            </button>
           </div>
         </div>
 
-        <!-- No modules -->
-        <div *ngIf="!curso.modulos?.length" class="no-modules">
-          <p>Este curso aún no tiene módulos.</p>
+        <!-- Form: Agregar módulo -->
+        <div *ngIf="canManage && mostrarFormModulo" class="modulo-form glass">
+          <h4>Nuevo módulo</h4>
+          <div class="field-group">
+            <label>Título del módulo</label>
+            <input type="text" class="input-field" [(ngModel)]="nuevoModulo.titulo" placeholder="Ej: Introducción al tema"/>
+          </div>
+          <div class="field-group">
+            <label>Contenido / Descripción</label>
+            <textarea class="input-field" rows="3" [(ngModel)]="nuevoModulo.contenido" placeholder="Describe qué cubre este módulo..."></textarea>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary btn-sm" (click)="agregarModulo()" [disabled]="creandoModulo">
+              <span *ngIf="!creandoModulo">Agregar</span>
+              <span *ngIf="creandoModulo" class="spinner-wrap"><span class="spinner"></span></span>
+            </button>
+            <button class="btn btn-outline btn-sm" (click)="mostrarFormModulo = false">Cancelar</button>
+          </div>
         </div>
 
-        <!-- Module items -->
+        <!-- Sin módulos -->
+        <div *ngIf="!curso.modulos?.length" class="no-modules">
+          <p>{{ canManage ? 'Este curso aún no tiene módulos. ¡Agrega el primero!' : 'Este curso aún no tiene módulos.' }}</p>
+        </div>
+
+        <!-- Lista de módulos -->
         <div class="modules-list">
           <div class="module-item"
             *ngFor="let modulo of curso.modulos; let i = index"
-            [class.completado]="isCompletado(modulo._id)">
+            [class.completado]="isCompletado(modulo._id)"
+            [class.editing]="moduloEditId === modulo._id">
 
-            <div class="module-num">
-              <span *ngIf="!isCompletado(modulo._id)">{{ i + 1 }}</span>
-              <svg *ngIf="isCompletado(modulo._id)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <polyline points="20 6 9 17 4 12"/>
-              </svg>
-            </div>
+            <!-- Modo edición inline -->
+            <ng-container *ngIf="canManage && moduloEditId === modulo._id">
+              <div class="module-edit-inline">
+                <div class="field-group">
+                  <label>Título</label>
+                  <input type="text" class="input-field" [(ngModel)]="moduloEditData.titulo"/>
+                </div>
+                <div class="field-group">
+                  <label>Contenido</label>
+                  <textarea class="input-field" rows="2" [(ngModel)]="moduloEditData.contenido"></textarea>
+                </div>
+                <div class="form-actions">
+                  <button class="btn btn-primary btn-sm" (click)="guardarModulo()" [disabled]="guardandoModulo">
+                    <span *ngIf="!guardandoModulo">Guardar</span>
+                    <span *ngIf="guardandoModulo" class="spinner-wrap"><span class="spinner"></span></span>
+                  </button>
+                  <button class="btn btn-outline btn-sm" (click)="moduloEditId = null">Cancelar</button>
+                </div>
+              </div>
+            </ng-container>
 
-            <div class="module-body">
-              <h4>{{ modulo.titulo }}</h4>
-              <p>{{ modulo.contenido }}</p>
-            </div>
+            <!-- Vista normal del módulo -->
+            <ng-container *ngIf="moduloEditId !== modulo._id">
+              <div class="module-num" [class.completed-num]="isCompletado(modulo._id)">
+                <span *ngIf="!isCompletado(modulo._id)">{{ i + 1 }}</span>
+                <svg *ngIf="isCompletado(modulo._id)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
 
-            <!-- Completar módulo (solo estudiante inscrito) -->
-            <button
-              *ngIf="isEstudiante && inscrito && !isCompletado(modulo._id)"
-              class="btn btn-sm complete-btn"
-              (click)="completarModulo(modulo._id)"
-              [disabled]="completandoModulo[modulo._id]">
-              <span *ngIf="!completandoModulo[modulo._id]">Completar</span>
-              <span *ngIf="completandoModulo[modulo._id]" class="spinner-wrap">
-                <span class="spinner dark"></span>
-              </span>
-            </button>
+              <div class="module-body">
+                <h4>{{ modulo.titulo }}</h4>
+                <p>{{ modulo.contenido }}</p>
+              </div>
 
-            <span *ngIf="isCompletado(modulo._id)" class="done-chip">✓ Listo</span>
+              <!-- Acciones Estudiante -->
+              <button *ngIf="isEstudiante && inscrito && !isCompletado(modulo._id)"
+                class="btn btn-sm complete-btn" (click)="completarModulo(modulo._id)"
+                [disabled]="completandoModulo[modulo._id]">
+                <span *ngIf="!completandoModulo[modulo._id]">Completar</span>
+                <span *ngIf="completandoModulo[modulo._id]" class="spinner-wrap"><span class="spinner dark"></span></span>
+              </button>
+              <span *ngIf="isCompletado(modulo._id)" class="done-chip">✓ Listo</span>
+
+              <!-- Acciones Instructor/Admin -->
+              <div *ngIf="canManage" class="module-manage-btns">
+                <button class="icon-btn edit-btn" title="Editar" (click)="abrirEditarModulo(modulo)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                </button>
+                <button class="icon-btn delete-btn" title="Eliminar" (click)="eliminarModulo(modulo._id)"
+                  [disabled]="eliminandoModulo[modulo._id]">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                  </svg>
+                </button>
+              </div>
+            </ng-container>
+
           </div>
         </div>
       </div>
 
-      <!-- Sidebar info -->
+      <!-- Sidebar -->
       <aside class="course-sidebar">
         <div class="sidebar-card glass">
           <h3>Sobre el instructor</h3>
@@ -172,4 +277,41 @@
 
     </div>
   </div>
+
+  <!-- ══ MODAL: INSCRITOS ════════════════════════════════ -->
+  <div class="modal-overlay" *ngIf="mostrarInscritos" (click)="mostrarInscritos = false">
+    <div class="modal-box glass" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>👥 Estudiantes inscritos</h3>
+        <button class="close-btn" (click)="mostrarInscritos = false">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div *ngIf="cargandoInscritos" class="modal-loading">
+          <div class="loader-orb small"></div>
+          <span>Cargando...</span>
+        </div>
+
+        <div *ngIf="!cargandoInscritos && inscritos.length === 0" class="modal-empty">
+          <p>Aún no hay estudiantes inscritos en este curso.</p>
+        </div>
+
+        <div *ngIf="!cargandoInscritos && inscritos.length > 0">
+          <div class="inscritos-count badge badge-primary" style="margin-bottom:16px">
+            {{ inscritos.length }} estudiante{{ inscritos.length !== 1 ? 's' : '' }}
+          </div>
+          <div class="inscritos-list">
+            <div class="inscrito-item" *ngFor="let i of inscritos">
+              <div class="inscrito-avatar">{{ i.estudiante?.nombre?.charAt(0)?.toUpperCase() || '?' }}</div>
+              <div class="inscrito-info">
+                <strong>{{ i.estudiante?.nombre || 'Estudiante' }}</strong>
+                <span>{{ i.estudiante?.email }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>

@@ -73,10 +73,14 @@
 }
 
 .gradient-text {
+  /* Fallback visible en todo momento */
+  color: #a5b4fc;
   background: var(--brand-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  /* Asegura que el texto nunca sea invisible */
+  display: inline;
 }
 
 .hero-sub {

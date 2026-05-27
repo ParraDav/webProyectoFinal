@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { Navbar } from './components/navbar/navbar';
@@ -8,7 +8,8 @@ import { filter } from 'rxjs/operators';
   selector: 'app-root',
   imports: [RouterOutlet, FormsModule, Navbar],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class App implements OnInit {
 

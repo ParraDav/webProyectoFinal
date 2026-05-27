@@ -8,6 +8,7 @@ import { VerCurso } from './components/ver-curso/ver-curso';
 import { MisCursos } from './components/mis-cursos/mis-cursos';
 import { Metricas } from './components/metricas/metricas';
 import { AdminUsuarios } from './components/admin-usuarios/admin-usuarios';
+import { CrearCurso } from './components/crear-curso/crear-curso';
 
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
@@ -45,6 +46,13 @@ export const routes: Routes = [
         component: MisCursos,
         canActivate: [authGuard, roleGuard],
         data: { roles: ['estudiante'] }
+    },
+
+    {
+        path: 'crear-curso',
+        component: CrearCurso,
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['instructor', 'administrador'] }
     },
 
     {

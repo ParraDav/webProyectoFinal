@@ -46,8 +46,8 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
-  background-color: var(--bg-base);
-  color: var(--text-primary);
+  background-color: var(--bg-base) !important;
+  color: var(--text-primary) !important;
   line-height: 1.6;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
@@ -63,6 +63,17 @@ p { color: var(--text-secondary); }
 
 a { color: var(--brand-accent); text-decoration: none; transition: color var(--transition); }
 a:hover { color: var(--brand-primary); }
+
+/* ── Gradient text utility ─────────────────────────── */
+/* Fallback: color lila visible si background-clip no funciona */
+.gradient-text {
+  color: #a5b4fc;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline;
+}
 
 /* ── Utility buttons ───────────────────────────────── */
 .btn {

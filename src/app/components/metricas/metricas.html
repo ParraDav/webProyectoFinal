@@ -1,1 +1,212 @@
-<p>metricas works!</p>
+<div class="metricas-page">
+
+  <!-- Background Orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="container animate-fade-up">
+
+    <!-- Welcome / Page Header -->
+    <div class="page-header">
+      <div>
+        <h1>Dashboard de <span class="gradient-text">Métricas</span></h1>
+        <p>Monitorea y analiza el rendimiento de tu contenido y la plataforma</p>
+      </div>
+      <div class="date-badge">
+        📅 Hoy: {{ todayDate }}
+      </div>
+    </div>
+
+    <!-- Skeleton Loader -->
+    <div class="loading-grid" *ngIf="loading">
+      <div class="skeleton-card" *ngFor="let i of [1,2,3]">
+        <div class="skeleton-title"></div>
+        <div class="skeleton-value"></div>
+        <div class="skeleton-footer"></div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <ng-container *ngIf="!loading">
+
+      <!-- ================= ADMINISTRATOR METRICS ================= -->
+      <div class="dashboard-section" *ngIf="rol === 'administrador' && metricasAdmin">
+        <h2 class="section-title">📊 Métricas Globales de la Plataforma</h2>
+        
+        <div class="stats-grid">
+          
+          <!-- Total Usuarios -->
+          <div class="stat-card glass card-primary">
+            <div class="card-glow"></div>
+            <div class="card-content">
+              <span class="card-icon">👥</span>
+              <h3>Usuarios Totales</h3>
+              <div class="stat-value">{{ metricasAdmin.totalUsuarios }}</div>
+              <p class="stat-desc">Estudiantes, Instructores y Administradores registrados</p>
+            </div>
+          </div>
+
+          <!-- Total Cursos -->
+          <div class="stat-card glass card-secondary">
+            <div class="card-glow"></div>
+            <div class="card-content">
+              <span class="card-icon">📚</span>
+              <h3>Cursos en la Plataforma</h3>
+              <div class="stat-value">{{ metricasAdmin.totalCursos }}</div>
+              <p class="stat-desc">Cursos activos, borrador y publicados</p>
+            </div>
+          </div>
+
+          <!-- Total Inscripciones -->
+          <div class="stat-card glass card-accent">
+            <div class="card-glow"></div>
+            <div class="card-content">
+              <span class="card-icon">🎓</span>
+              <h3>Inscripciones Totales</h3>
+              <div class="stat-value">{{ metricasAdmin.totalInscripciones }}</div>
+              <p class="stat-desc">Estudiantes enrolados activamente en cursos</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Global Charts/Visual elements for Admin -->
+        <div class="analysis-layout">
+          
+          <div class="analysis-card glass">
+            <h3>📈 Tasa de Conversión</h3>
+            <div class="chart-container">
+              <div class="circular-progress-wrap">
+                <div class="circular-progress" [style.--percent]="conversionRate">
+                  <div class="inner-value">{{ conversionRate }}%</div>
+                </div>
+              </div>
+              <div class="chart-desc">
+                <strong>Inscripción Promedio</strong>
+                <p>Porcentaje promedio de alumnos inscritos por curso en Skillia</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="analysis-card glass list-card">
+            <h3>⚙️ Resumen de Actividad Global</h3>
+            <div class="activity-list">
+              <div class="activity-item">
+                <span class="bullet success"></span>
+                <div>
+                  <strong>Salud de la Base de Datos</strong>
+                  <p>API corriendo óptimamente y conectada a MongoDB</p>
+                </div>
+              </div>
+              <div class="activity-item">
+                <span class="bullet primary"></span>
+                <div>
+                  <strong>Relación Estudiante / Curso</strong>
+                  <p>Promedio de {{ (metricasAdmin.totalInscripciones / (metricasAdmin.totalCursos || 1)) | number:'1.0-1' }} inscripciones por curso</p>
+                </div>
+              </div>
+              <div class="activity-item">
+                <span class="bullet accent"></span>
+                <div>
+                  <strong>Cuentas de Administradores</strong>
+                  <p>Seguridad robusta por JSON Web Token (JWT) activa</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ================= INSTRUCTOR METRICS ================= -->
+      <div class="dashboard-section" *ngIf="(rol === 'instructor' || rol === 'administrador') && metricasInst">
+        <h2 class="section-title">👨‍🏫 Panel del Instructor: {{ rol === 'administrador' ? 'Mis Cursos Propios' : 'Resumen Académico' }}</h2>
+
+        <div class="stats-grid">
+          
+          <!-- Cursos Propios -->
+          <div class="stat-card glass card-primary">
+            <div class="card-glow"></div>
+            <div class="card-content">
+              <span class="card-icon">🚀</span>
+              <h3>Mis Cursos</h3>
+              <div class="stat-value">{{ metricasInst.totalCursos }}</div>
+              <p class="stat-desc">Cursos que has creado y tienes bajo tu tutoría</p>
+            </div>
+          </div>
+
+          <!-- Total Estudiantes Inscritos -->
+          <div class="stat-card glass card-secondary">
+            <div class="card-glow"></div>
+            <div class="card-content">
+              <span class="card-icon">👨‍🎓</span>
+              <h3>Estudiantes Inscritos</h3>
+              <div class="stat-value">{{ metricasInst.totalEstudiantesInscritos }}</div>
+              <p class="stat-desc">Alumnos inscritos en todos tus cursos activos</p>
+            </div>
+          </div>
+
+          <!-- Total Modulos -->
+          <div class="stat-card glass card-accent">
+            <div class="card-glow"></div>
+            <div class="card-content">
+              <span class="card-icon">🧩</span>
+              <h3>Módulos Totales</h3>
+              <div class="stat-value">{{ metricasInst.totalModulos }}</div>
+              <p class="stat-desc">Total de lecciones creadas a lo largo de tus cursos</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Instructor Visual Indicators -->
+        <div class="analysis-layout">
+          
+          <div class="analysis-card glass">
+            <h3>📚 Densidad del Contenido</h3>
+            <div class="chart-container">
+              <div class="linear-bars">
+                <div class="bar-group">
+                  <div class="bar-header">
+                    <span>Módulos por curso (Promedio)</span>
+                    <span>{{ promedioModulosPorCurso | number:'1.0-1' }}</span>
+                  </div>
+                  <div class="bar-track">
+                    <div class="bar-fill bg-primary" [style.width]="(promedioModulosPorCurso * 10) + '%'"></div>
+                  </div>
+                </div>
+                <div class="bar-group">
+                  <div class="bar-header">
+                    <span>Estudiantes por curso (Promedio)</span>
+                    <span>{{ promedioEstudiantesPorCurso | number:'1.0-1' }}</span>
+                  </div>
+                  <div class="bar-track">
+                    <div class="bar-fill bg-accent" [style.width]="(promedioEstudiantesPorCurso * 5) + '%'"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="analysis-card glass list-card">
+            <h3>💡 Recomendaciones Pedagógicas</h3>
+            <ul class="tips-list">
+              <li>
+                <strong>Organización didáctica</strong>: Te sugerimos apuntar a 5-8 módulos por curso para mantener alta la retención.
+              </li>
+              <li>
+                <strong>Fomenta inscripciones</strong>: Promueve tus cursos en redes sociales e incluye un temario atractivo en la descripción.
+              </li>
+              <li>
+                <strong>Feedback de alumnos</strong>: Puedes ver quiénes están inscritos haciendo click en el botón "Ver inscritos" en el detalle de tu curso.
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+    </ng-container>
+
+  </div>
+</div>

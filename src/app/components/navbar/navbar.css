@@ -62,7 +62,7 @@
   border-radius: var(--radius-sm);
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.85);
   transition: all var(--transition);
   text-decoration: none;
   position: relative;
@@ -80,12 +80,23 @@
 
 .nav-links a:hover,
 .nav-links a.active {
-  color: var(--text-primary);
-  background: rgba(255,255,255,0.05);
+  color: #fff;
+  background: rgba(255,255,255,0.08);
 }
 
 .nav-links a.active::after {
   left: 14px; right: 14px;
+}
+
+/* Links más visibles cuando el navbar tiene fondo (scrolled) */
+.navbar.scrolled .nav-links a {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.navbar.scrolled .nav-links a:hover,
+.navbar.scrolled .nav-links a.active {
+  color: #fff;
+  background: rgba(255,255,255,0.1);
 }
 
 /* ── Auth section ──────────────────────────────────── */

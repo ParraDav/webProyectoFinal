@@ -1,0 +1,123 @@
+<div class="crear-curso-page">
+
+  <!-- Background -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="container" style="padding-top:48px; padding-bottom:80px">
+
+    <!-- Back -->
+    <a routerLink="/cursos" class="back-link animate-fade-up">← Volver a cursos</a>
+
+    <div class="crear-layout animate-fade-up">
+
+      <!-- Form Card -->
+      <div class="crear-card glass">
+
+        <div class="crear-header">
+          <div class="crear-icon">🚀</div>
+          <h1>Crear nuevo curso</h1>
+          <p>Comparte tu conocimiento con el mundo</p>
+        </div>
+
+        <form [formGroup]="cursoForm" (ngSubmit)="crear()" novalidate>
+
+          <!-- Nombre -->
+          <div class="field-group">
+            <label for="curso-nombre">Nombre del curso</label>
+            <input id="curso-nombre" type="text" class="input-field"
+              formControlName="nombre" placeholder="Ej: Introducción a Angular 18"/>
+            <span class="field-error" *ngIf="nombre?.invalid && nombre?.touched">
+              <ng-container *ngIf="nombre?.errors?.['required']">El nombre es requerido.</ng-container>
+              <ng-container *ngIf="nombre?.errors?.['minlength']">Mínimo 3 caracteres.</ng-container>
+            </span>
+          </div>
+
+          <!-- Descripción -->
+          <div class="field-group">
+            <label for="curso-descripcion">Descripción</label>
+            <textarea id="curso-descripcion" class="input-field" rows="4"
+              formControlName="descripcion" placeholder="Describe de qué trata tu curso, qué aprenderán los estudiantes..."></textarea>
+            <span class="field-error" *ngIf="descripcion?.invalid && descripcion?.touched">
+              <ng-container *ngIf="descripcion?.errors?.['required']">La descripción es requerida.</ng-container>
+              <ng-container *ngIf="descripcion?.errors?.['minlength']">Mínimo 10 caracteres.</ng-container>
+            </span>
+          </div>
+
+          <!-- Estado -->
+          <div class="field-group">
+            <label for="curso-estado">Estado inicial</label>
+            <div class="estado-selector">
+              <label class="estado-option" [class.selected]="cursoForm.get('estado')?.value === 'borrador'">
+                <input type="radio" formControlName="estado" value="borrador" hidden/>
+                <span class="estado-icon">📝</span>
+                <div>
+                  <strong>Borrador</strong>
+                  <span>Solo tú puedes verlo</span>
+                </div>
+              </label>
+              <label class="estado-option" [class.selected]="cursoForm.get('estado')?.value === 'publicado'">
+                <input type="radio" formControlName="estado" value="publicado" hidden/>
+                <span class="estado-icon">🌐</span>
+                <div>
+                  <strong>Publicado</strong>
+                  <span>Visible para todos</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn btn-primary btn-lg submit-btn" [disabled]="loading">
+            <span *ngIf="!loading">Crear curso →</span>
+            <span *ngIf="loading" class="spinner-wrap">
+              <span class="spinner"></span> Creando...
+            </span>
+          </button>
+
+        </form>
+
+      </div>
+
+      <!-- Info Panel -->
+      <div class="info-panel">
+        <div class="info-card glass">
+          <h3>📋 Próximos pasos</h3>
+          <div class="steps-list">
+            <div class="step-item active">
+              <div class="step-num">1</div>
+              <div>
+                <strong>Crea el curso</strong>
+                <p>Define el nombre y descripción general</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div>
+                <strong>Agrega módulos</strong>
+                <p>Organiza el contenido en módulos temáticos</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div>
+                <strong>Publica el curso</strong>
+                <p>Cambia el estado a "Publicado" para que sea visible</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card glass tips-card">
+          <h3>💡 Consejos</h3>
+          <ul>
+            <li>Usa un nombre claro y descriptivo</li>
+            <li>Escribe una descripción que enganche al estudiante</li>
+            <li>Comienza en modo borrador para ir agregando módulos poco a poco</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
