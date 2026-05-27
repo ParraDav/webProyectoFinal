@@ -1,50 +1,200 @@
-.register-container {
-    height: 90vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #f5f7fb;
+/* Reutiliza los estilos del login */
+.auth-page, .auth-card, .auth-header, .brand-mark,
+.field-group, label, .input-wrap, .input-icon,
+.eye-btn, .field-error, .submit-btn,
+.spinner-wrap, .spinner, .auth-footer,
+.orb, .orb-1, .orb-2 {
+  /* Defined in login.css — shared via global app.css tokens */
 }
 
-.register-form {
-    width: 380px;
-    background: white;
-    padding: 35px;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, .1);
-
-    display: flex;
-    flex-direction: column;
+/* ── Auth page layout ────────────────────────────────── */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-base);
 }
 
-.register-form h2 {
-    text-align: center;
-    margin-bottom: 25px;
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  animation: orb-float 8s ease-in-out infinite;
 }
 
-.register-form input {
-    margin-bottom: 15px;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+.orb-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(99,102,241,0.22), transparent 70%);
+  top: -150px; right: -100px;
+  animation-delay: 0s;
 }
 
-.register-form button {
-    padding: 12px;
-    border: none;
-    background: #38bdf8;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
+.orb-2 {
+  width: 380px; height: 380px;
+  background: radial-gradient(circle, rgba(139,92,246,0.18), transparent 70%);
+  bottom: -100px; left: -80px;
+  animation-delay: -4s;
 }
 
-.register-form button:hover {
-    background: #0ea5e9;
+.orb-3 {
+  width: 250px; height: 250px;
+  background: radial-gradient(circle, rgba(56,189,248,0.12), transparent 70%);
+  top: 40%; left: 50%;
+  animation-delay: -2s;
 }
 
-.register-form select {
-    margin-bottom: 15px;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+@keyframes orb-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%       { transform: translate(15px, -15px) scale(1.04); }
+}
+
+/* ── Auth card ───────────────────────────────────────── */
+.auth-card {
+  width: 100%;
+  max-width: 460px;
+  padding: 48px 40px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Header ──────────────────────────────────────────── */
+.auth-header { text-align: center; margin-bottom: 32px; }
+
+.brand-mark {
+  font-size: 2.8rem;
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 0 16px rgba(99,102,241,0.4));
+}
+
+.auth-header h1 {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.auth-header p { font-size: 0.9rem; color: var(--text-secondary); }
+
+/* ── Field group ─────────────────────────────────────── */
+.field-group {
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.input-wrap { position: relative; display: flex; align-items: center; }
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  width: 16px; height: 16px;
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: color var(--transition);
+}
+.input-wrap:focus-within .input-icon { color: var(--brand-primary); }
+.input-wrap .input-field { padding-left: 42px; }
+
+.eye-btn {
+  position: absolute; right: 12px;
+  background: transparent; border: none; cursor: pointer;
+  padding: 4px; color: var(--text-muted);
+  transition: color var(--transition); display: flex; align-items: center;
+}
+.eye-btn:hover { color: var(--text-primary); }
+.eye-btn svg { width: 17px; height: 17px; }
+
+.field-error {
+  font-size: 0.78rem; color: var(--danger);
+  display: flex; align-items: center; gap: 4px;
+}
+
+/* ── Role selector ───────────────────────────────────── */
+.role-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.role-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 12px;
+  background: var(--bg-elevated);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: center;
+}
+
+.role-option:hover {
+  border-color: var(--brand-primary);
+  background: rgba(99,102,241,0.07);
+}
+
+.role-option.selected {
+  border-color: var(--brand-primary);
+  background: rgba(99,102,241,0.12);
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+}
+
+.role-icon { font-size: 1.6rem; line-height: 1; }
+
+.role-label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.role-desc {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+/* ── Submit ──────────────────────────────────────────── */
+.submit-btn {
+  width: 100%; justify-content: center;
+  margin-top: 10px; padding: 14px; font-size: 0.95rem;
+}
+.submit-btn:disabled { opacity: 0.65; cursor: not-allowed; transform: none !important; }
+
+.spinner-wrap { display: flex; align-items: center; gap: 10px; }
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* ── Footer ──────────────────────────────────────────── */
+.auth-footer {
+  text-align: center; margin-top: 24px;
+  font-size: 0.88rem; color: var(--text-secondary);
+}
+.auth-footer a { color: var(--brand-primary); font-weight: 600; }
+.auth-footer a:hover { text-decoration: underline; }
+
+@media (max-width: 480px) {
+  .auth-card { padding: 32px 20px; }
+  .role-selector { grid-template-columns: 1fr; }
 }

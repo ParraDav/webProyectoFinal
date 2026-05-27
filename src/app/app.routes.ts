@@ -5,6 +5,13 @@ import { Login } from './components/login/login';
 import { Register } from './components/register/register';
 import { Cursos } from './components/cursos/cursos';
 import { VerCurso } from './components/ver-curso/ver-curso';
+import { MisCursos } from './components/mis-cursos/mis-cursos';
+import { Metricas } from './components/metricas/metricas';
+import { AdminUsuarios } from './components/admin-usuarios/admin-usuarios';
+
+import { authGuard } from './guards/auth.guard';
+import { roleGuard } from './guards/role.guard';
+
 export const routes: Routes = [
 
     {
@@ -32,9 +39,31 @@ export const routes: Routes = [
         component: VerCurso
     },
 
+    // ── Rutas protegidas (requieren login) ──────────────────────────
+    {
+        path: 'mis-cursos',
+        component: MisCursos,
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['estudiante'] }
+    },
+
+    {
+        path: 'metricas',
+        component: Metricas,
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['instructor', 'administrador'] }
+    },
+
+    {
+        path: 'admin-usuarios',
+        component: AdminUsuarios,
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['administrador'] }
+    },
+
     {
         path: '**',
         redirectTo: ''
     }
 
-];
+];

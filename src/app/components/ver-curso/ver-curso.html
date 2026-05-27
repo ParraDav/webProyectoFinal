@@ -1,66 +1,175 @@
-<div class="curso-container">
+<!-- ══ VER CURSO ══════════════════════════════════════== -->
+<div class="ver-curso-page">
 
-    <div *ngIf="cargando" class="loading">
-        Cargando curso...
-    </div>
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading-screen">
+    <div class="loader-orb"></div>
+    <p>Cargando curso...</p>
+  </div>
 
-    <div *ngIf="!cargando && !curso" class="error">
-        Curso no encontrado.
-    </div>
+  <!-- Not found -->
+  <div *ngIf="!cargando && !curso" class="not-found container">
+    <div class="empty-icon">😕</div>
+    <h2>Curso no encontrado</h2>
+    <p>El curso que buscas no existe o no está disponible.</p>
+    <a routerLink="/cursos" class="btn btn-primary">Ver todos los cursos</a>
+  </div>
 
-    <div class="curso-card" *ngIf="!cargando && curso">
+  <!-- Course content -->
+  <div *ngIf="!cargando && curso" class="animate-fade-up">
 
-        <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4" [alt]="curso.nombre">
-
-        <div class="curso-info">
-
+    <!-- Hero del curso -->
+    <div class="course-hero">
+      <div class="course-hero-bg"></div>
+      <div class="container course-hero-content">
+        <a routerLink="/cursos" class="back-link">
+          ← Volver a cursos
+        </a>
+        <div class="course-hero-body">
+          <div class="course-hero-info">
+            <span class="badge badge-success">Publicado</span>
             <h1>{{ curso.nombre }}</h1>
+            <p class="course-desc">{{ curso.descripcion }}</p>
+            <div class="course-meta">
+              <span class="meta-pill">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                </svg>
+                {{ curso.instructor?.nombre || 'Instructor' }}
+              </span>
+              <span class="meta-pill">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+                </svg>
+                {{ curso.modulos?.length || 0 }} módulos
+              </span>
+            </div>
+          </div>
 
-            <p class="descripcion">{{ curso.descripcion }}</p>
+          <!-- Enroll card -->
+          <div class="enroll-card glass">
+            <div class="enroll-icon">📖</div>
+            <h3>Comienza a aprender</h3>
+            <p>Accede a todos los módulos del curso y avanza a tu ritmo.</p>
 
-            <div class="details">
+            <!-- Estudiante no inscrito o sin login -->
+            <ng-container *ngIf="!inscrito && (isEstudiante || !isLoggedIn)">
+              <button class="btn btn-primary btn-lg enroll-btn"
+                (click)="inscribirse()"
+                [disabled]="inscribiendo">
+                <span *ngIf="!inscribiendo">🚀 Inscribirse gratis</span>
+                <span *ngIf="inscribiendo" class="spinner-wrap">
+                  <span class="spinner"></span> Procesando...
+                </span>
+              </button>
+            </ng-container>
 
-                <p>
-                    <strong>Instructor:</strong>
-                    {{ curso.instructor?.nombre || 'No disponible' }}
-                </p>
-
-                <p *ngIf="curso.duracion">
-                    <strong>Duración:</strong>
-                    {{ curso.duracion }}
-                </p>
-
-                <p *ngIf="curso.prerequisito">
-                    <strong>Prerrequisito:</strong>
-                    {{ curso.prerequisito }}
-                </p>
-
-                <p *ngIf="curso.edadMinima && curso.edadMinima > 0">
-                    <strong>Edad mínima:</strong>
-                    {{ curso.edadMinima }} años
-                </p>
-
-                <p>
-                    <strong>Módulos:</strong>
-                    {{ curso.modulos?.length || 0 }}
-                </p>
-
+            <!-- Ya inscrito o completado -->
+            <div *ngIf="inscrito" class="enrolled-badge">
+              <span>✅ Estás inscrito</span>
             </div>
 
-            <div *ngIf="mensajeExito" class="alert alert-success">
-                {{ mensajeExito }}
+            <!-- Instructor/Admin -->
+            <div *ngIf="canManage" class="manage-hint">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16">
+                <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+              </svg>
+              Eres el instructor de este curso
             </div>
-
-            <div *ngIf="mensajeError" class="alert alert-error">
-                {{ mensajeError }}
-            </div>
-
-            <button class="btn-inscribir" (click)="inscribirse()" [disabled]="inscribiendo || !!mensajeExito">
-                {{ inscribiendo ? 'Procesando...' : 'Inscribirse' }}
-            </button>
+          </div>
 
         </div>
-
+      </div>
     </div>
 
+    <!-- Main layout -->
+    <div class="container course-layout">
+
+      <!-- Modules list -->
+      <div class="modules-section">
+        <div class="modules-header">
+          <h2>Contenido del curso</h2>
+          <!-- Progress bar (solo estudiante inscrito) -->
+          <div class="progress-info" *ngIf="inscrito && isEstudiante && curso.modulos?.length">
+            <span class="progress-label">{{ progreso }}% completado</span>
+            <div class="progress-wrap">
+              <div class="progress-fill" [style.width.%]="progreso"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- No modules -->
+        <div *ngIf="!curso.modulos?.length" class="no-modules">
+          <p>Este curso aún no tiene módulos.</p>
+        </div>
+
+        <!-- Module items -->
+        <div class="modules-list">
+          <div class="module-item"
+            *ngFor="let modulo of curso.modulos; let i = index"
+            [class.completado]="isCompletado(modulo._id)">
+
+            <div class="module-num">
+              <span *ngIf="!isCompletado(modulo._id)">{{ i + 1 }}</span>
+              <svg *ngIf="isCompletado(modulo._id)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+
+            <div class="module-body">
+              <h4>{{ modulo.titulo }}</h4>
+              <p>{{ modulo.contenido }}</p>
+            </div>
+
+            <!-- Completar módulo (solo estudiante inscrito) -->
+            <button
+              *ngIf="isEstudiante && inscrito && !isCompletado(modulo._id)"
+              class="btn btn-sm complete-btn"
+              (click)="completarModulo(modulo._id)"
+              [disabled]="completandoModulo[modulo._id]">
+              <span *ngIf="!completandoModulo[modulo._id]">Completar</span>
+              <span *ngIf="completandoModulo[modulo._id]" class="spinner-wrap">
+                <span class="spinner dark"></span>
+              </span>
+            </button>
+
+            <span *ngIf="isCompletado(modulo._id)" class="done-chip">✓ Listo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar info -->
+      <aside class="course-sidebar">
+        <div class="sidebar-card glass">
+          <h3>Sobre el instructor</h3>
+          <div class="instructor-info">
+            <div class="instructor-avatar">{{ curso.instructor?.nombre?.charAt(0)?.toUpperCase() || 'I' }}</div>
+            <div>
+              <strong>{{ curso.instructor?.nombre || 'Instructor' }}</strong>
+              <span>{{ curso.instructor?.email }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-card glass">
+          <h3>Detalles</h3>
+          <div class="detail-list">
+            <div class="detail-item">
+              <span class="detail-label">Módulos</span>
+              <span class="detail-value">{{ curso.modulos?.length || 0 }}</span>
+            </div>
+            <div class="detail-item" *ngIf="curso.duracion">
+              <span class="detail-label">Duración</span>
+              <span class="detail-value">{{ curso.duracion }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Estado</span>
+              <span class="badge badge-success">{{ curso.estado }}</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </div>
 </div>

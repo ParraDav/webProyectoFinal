@@ -1,25 +1,73 @@
-<nav class="navbar">
+<nav class="navbar" [class.scrolled]="scrolled">
+  <div class="container nav-inner">
 
-    <div class="logo">
-        CursosOnline
+    <!-- Logo -->
+    <a routerLink="/" class="logo" (click)="closeMenu()">
+      <span class="logo-icon">◈</span>
+      <span class="logo-text">Skillia</span>
+    </a>
+
+    <!-- Desktop links -->
+    <div class="nav-links">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Inicio</a>
+      <a routerLink="/cursos" routerLinkActive="active">Cursos</a>
+
+      <!-- Estudiante -->
+      <a *ngIf="isEstudiante" routerLink="/mis-cursos" routerLinkActive="active">Mis Cursos</a>
+
+      <!-- Instructor o Admin -->
+      <a *ngIf="isInstructor || isAdmin" routerLink="/metricas" routerLinkActive="active">Métricas</a>
+
+      <!-- Solo Admin -->
+      <a *ngIf="isAdmin" routerLink="/admin-usuarios" routerLinkActive="active">Usuarios</a>
     </div>
 
-    <div class="links">
+    <!-- Auth section desktop -->
+    <div class="nav-auth">
+      <ng-container *ngIf="!isLoggedIn; else loggedIn">
+        <a routerLink="/login" class="btn btn-outline btn-sm">Iniciar sesión</a>
+        <a routerLink="/register" class="btn btn-primary btn-sm">Registrarse</a>
+      </ng-container>
 
-        <a routerLink="/">Inicio</a>
-
-        <a routerLink="/cursos">
-            Cursos
-        </a>
-
-        <a routerLink="/login">
-            Login
-        </a>
-
-        <a routerLink="/register">
-            Registro
-        </a>
-
+      <ng-template #loggedIn>
+        <div class="user-badge">
+          <span class="user-avatar">{{ rol?.charAt(0)?.toUpperCase() }}</span>
+          <span class="user-role">{{ rol }}</span>
+        </div>
+        <button class="btn btn-outline btn-sm" (click)="logout()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          Salir
+        </button>
+      </ng-template>
     </div>
 
+    <!-- Hamburger -->
+    <button class="hamburger" (click)="toggleMenu()" [class.open]="menuOpen" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+
+  </div>
+
+  <!-- Mobile drawer -->
+  <div class="mobile-menu" [class.open]="menuOpen">
+    <a routerLink="/" (click)="closeMenu()">Inicio</a>
+    <a routerLink="/cursos" (click)="closeMenu()">Cursos</a>
+    <a *ngIf="isEstudiante" routerLink="/mis-cursos" (click)="closeMenu()">Mis Cursos</a>
+    <a *ngIf="isInstructor || isAdmin" routerLink="/metricas" (click)="closeMenu()">Métricas</a>
+    <a *ngIf="isAdmin" routerLink="/admin-usuarios" (click)="closeMenu()">Usuarios</a>
+
+    <div class="mobile-auth">
+      <ng-container *ngIf="!isLoggedIn; else mobileLoggedIn">
+        <a routerLink="/login" class="btn btn-outline btn-sm" (click)="closeMenu()">Iniciar sesión</a>
+        <a routerLink="/register" class="btn btn-primary btn-sm" (click)="closeMenu()">Registrarse</a>
+      </ng-container>
+      <ng-template #mobileLoggedIn>
+        <button class="btn btn-danger btn-sm" (click)="logout()">Cerrar sesión</button>
+      </ng-template>
+    </div>
+  </div>
 </nav>

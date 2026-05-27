@@ -1,31 +1,136 @@
-<div class="courses-page">
+<!-- ══ CURSOS PAGE ══════════════════════════════════════ -->
+<div class="cursos-page">
+  <div class="container">
 
-    <h1>Todos los Cursos</h1>
-
-    <div class="courses-grid">
-
-        <div class="course-card" *ngFor="let curso of cursos">
-
-            <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4">
-
-            <div class="course-content">
-
-                <h2>
-                    {{curso.nombre}}
-                </h2>
-
-                <p>
-                    {{curso.descripcion}}
-                </p>
-
-                <button [routerLink]="['/ver-curso', curso._id]">
-                    Ver Curso
-                </button>
-
-            </div>
-
-        </div>
-
+    <!-- Page Header -->
+    <div class="page-header animate-fade-up">
+      <div>
+        <h1>Catálogo de <span class="gradient-text">Cursos</span></h1>
+        <p>Explora todos los cursos disponibles en la plataforma</p>
+      </div>
+      <a *ngIf="canManage" routerLink="/cursos/crear" class="btn btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Crear Curso
+      </a>
     </div>
 
+    <!-- Search Bar -->
+    <div class="search-bar animate-fade-up">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input
+          id="cursos-search"
+          type="text"
+          class="input-field search-input"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearch()"
+          placeholder="Buscar por nombre o descripción..."
+        />
+        <button *ngIf="searchTerm" class="clear-btn" (click)="clearSearch()">✕</button>
+      </div>
+      <span class="results-count" *ngIf="!cargando">
+        {{ cursos.length }} resultado{{ cursos.length !== 1 ? 's' : '' }}
+      </span>
+    </div>
+
+    <!-- Skeleton -->
+    <div class="courses-grid" *ngIf="cargando">
+      <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5,6]">
+        <div class="skeleton-img"></div>
+        <div class="skeleton-body">
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line medium"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="!cargando && cursos.length === 0" class="empty-state">
+      <div class="empty-icon">🔍</div>
+      <h3>Sin resultados</h3>
+      <p *ngIf="searchTerm">No encontramos cursos para "<strong>{{ searchTerm }}</strong>"</p>
+      <p *ngIf="!searchTerm">No hay cursos disponibles por el momento.</p>
+      <button *ngIf="searchTerm" class="btn btn-outline" (click)="clearSearch()">Limpiar búsqueda</button>
+    </div>
+
+    <!-- Grid -->
+    <div class="courses-grid animate-fade-up" *ngIf="!cargando && cursos.length > 0">
+      <article class="course-card" *ngFor="let curso of cursos">
+
+        <!-- Card image / icon -->
+        <div class="card-image">
+          <div class="card-img-placeholder">
+            <span class="card-icon">{{ getCourseIcon(curso.nombre) }}</span>
+          </div>
+          <span class="badge badge-success card-status">Publicado</span>
+          <!-- Manage buttons for instructor/admin -->
+          <div class="card-manage" *ngIf="canManage">
+            <a [routerLink]="['/ver-curso', curso._id]" class="manage-btn" title="Editar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Card body -->
+        <div class="card-body">
+          <h3>{{ curso.nombre }}</h3>
+          <p class="card-desc">{{ curso.descripcion | slice:0:100 }}{{ curso.descripcion?.length > 100 ? '...' : '' }}</p>
+
+          <div class="card-meta">
+            <span class="meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+              {{ curso.instructor?.nombre || 'Instructor' }}
+            </span>
+            <span class="meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+              </svg>
+              {{ curso.modulos?.length || 0 }} módulos
+            </span>
+          </div>
+
+          <!-- Acciones según rol -->
+          <div class="card-actions">
+
+            <!-- Sin login -->
+            <ng-container *ngIf="!isLoggedIn">
+              <button class="btn btn-primary" (click)="inscribirse(curso)">Inscribirse</button>
+              <a [routerLink]="['/ver-curso', curso._id]" class="btn btn-outline">Ver más</a>
+            </ng-container>
+
+            <!-- Estudiante -->
+            <ng-container *ngIf="isEstudiante">
+              <button
+                class="btn btn-primary"
+                (click)="inscribirse(curso)"
+                [disabled]="inscribiendo[curso._id]">
+                <span *ngIf="!inscribiendo[curso._id]">Inscribirse</span>
+                <span *ngIf="inscribiendo[curso._id]" class="spinner-wrap">
+                  <span class="spinner"></span>
+                </span>
+              </button>
+              <a [routerLink]="['/ver-curso', curso._id]" class="btn btn-outline">Ver más</a>
+            </ng-container>
+
+            <!-- Instructor o Admin -->
+            <ng-container *ngIf="canManage">
+              <a [routerLink]="['/ver-curso', curso._id]" class="btn btn-primary">Administrar →</a>
+            </ng-container>
+
+          </div>
+        </div>
+      </article>
+    </div>
+
+  </div>
 </div>

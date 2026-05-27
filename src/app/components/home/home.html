@@ -1,47 +1,149 @@
+<!-- ══ HOME PAGE ══════════════════════════════════════════ -->
+
+<!-- HERO -->
 <section class="hero">
-    <div class="hero-content">
-        <h1>Aprende desde cualquier lugar</h1>
-        <p>Plataforma de cursos online con Angular, Node.js y MongoDB</p>
-        <button class="btn" routerLink="/cursos">Explorar Cursos</button>
+  <div class="hero-bg"></div>
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+
+  <div class="container hero-content animate-fade-up">
+    <div class="hero-badge">🚀 Plataforma de aprendizaje online</div>
+    <h1>
+      Aprende sin<br/>
+      <span class="gradient-text">límites</span>
+    </h1>
+    <p class="hero-sub">
+      Domina nuevas habilidades con cursos creados por expertos.<br/>
+      A tu ritmo, desde cualquier lugar del mundo.
+    </p>
+    <div class="hero-actions">
+      <a routerLink="/cursos" class="btn btn-primary btn-lg">Explorar cursos</a>
+      <a routerLink="/register" class="btn btn-outline btn-lg">Comenzar gratis</a>
     </div>
+
+    <!-- Stats -->
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-number">{{ cursos.length }}</span>
+        <span class="stat-label">Cursos activos</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-number">100%</span>
+        <span class="stat-label">Online</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-number">∞</span>
+        <span class="stat-label">Acceso de por vida</span>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section class="courses">
+<!-- FEATURED COURSES -->
+<section class="section">
+  <div class="container">
 
-    <h2 class="section-title">Cursos Destacados</h2>
-
-    <div *ngIf="cargando" class="loading">
-        Cargando cursos...
+    <div class="section-header">
+      <h2>Cursos <span class="gradient-text">Destacados</span></h2>
+      <p>Explora nuestra selección de cursos más populares</p>
     </div>
 
-    <div *ngIf="!cargando && cursos.length === 0" class="empty">
-        No hay cursos disponibles por el momento.
-    </div>
-
-    <div class="course-container" *ngIf="!cargando && cursos.length > 0">
-
-        <div class="course-card" *ngFor="let curso of cursos">
-
-            <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4" [alt]="curso.nombre">
-
-            <div class="course-info">
-
-                <h3>{{ curso.nombre }}</h3>
-
-                <p>{{ curso.descripcion }}</p>
-
-                <button class="btn" [routerLink]="['/ver-curso', curso._id]">
-                    Ver Curso
-                </button>
-
-            </div>
-
+    <!-- Skeleton loading -->
+    <div *ngIf="cargando" class="courses-grid">
+      <div class="skeleton-card" *ngFor="let i of [1,2,3]">
+        <div class="skeleton-img"></div>
+        <div class="skeleton-body">
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line medium"></div>
+          <div class="skeleton-line short"></div>
         </div>
-
+      </div>
     </div>
 
+    <!-- Empty state -->
+    <div *ngIf="!cargando && cursos.length === 0" class="empty-state">
+      <div class="empty-icon">📚</div>
+      <h3>Sin cursos disponibles</h3>
+      <p>Aún no hay cursos publicados. ¡Vuelve pronto!</p>
+    </div>
+
+    <!-- Grid -->
+    <div class="courses-grid" *ngIf="!cargando && cursos.length > 0">
+      <article class="course-card" *ngFor="let curso of cursos">
+        <div class="card-image">
+          <div class="card-img-placeholder">
+            <span class="card-icon">{{ getCourseIcon(curso.nombre) }}</span>
+          </div>
+          <span class="badge badge-success card-status">Publicado</span>
+        </div>
+        <div class="card-body">
+          <h3>{{ curso.nombre }}</h3>
+          <p class="card-desc">{{ curso.descripcion | slice:0:90 }}{{ curso.descripcion?.length > 90 ? '...' : '' }}</p>
+          <div class="card-meta">
+            <span class="meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+              {{ curso.instructor?.nombre || 'Instructor' }}
+            </span>
+            <span class="meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+              </svg>
+              {{ curso.modulos?.length || 0 }} módulos
+            </span>
+          </div>
+          <a class="btn btn-primary" [routerLink]="['/ver-curso', curso._id]">Ver curso →</a>
+        </div>
+      </article>
+    </div>
+
+    <div class="view-all" *ngIf="!cargando && cursos.length > 0">
+      <a routerLink="/cursos" class="btn btn-outline">Ver todos los cursos →</a>
+    </div>
+
+  </div>
 </section>
 
-<footer>
-    <p>© 2026 CursosOnline</p>
+<!-- FEATURES -->
+<section class="features-section section">
+  <div class="container">
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-icon">🎯</div>
+        <h3>Aprende a tu ritmo</h3>
+        <p>Accede a todos los módulos cuando quieras, sin horarios fijos.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🏆</div>
+        <h3>Instructores expertos</h3>
+        <p>Contenido creado por profesionales con experiencia real en la industria.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📊</div>
+        <h3>Rastrea tu progreso</h3>
+        <p>Marca módulos como completados y visualiza tu avance en tiempo real.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="footer-logo">◈ Skillia</span>
+      <p>La plataforma de aprendizaje que te lleva al siguiente nivel.</p>
+    </div>
+    <div class="footer-links">
+      <a routerLink="/cursos">Cursos</a>
+      <a routerLink="/register">Registrarse</a>
+      <a routerLink="/login">Iniciar sesión</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Skillia — Todos los derechos reservados.</p>
+  </div>
 </footer>

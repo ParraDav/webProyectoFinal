@@ -1,1 +1,84 @@
-<p>mis-cursos works!</p>
+<!-- ══ MIS CURSOS ═══════════════════════════════════════ -->
+<div class="mis-cursos-page">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="page-header animate-fade-up">
+      <div class="header-left">
+        <div class="user-welcome" *ngIf="perfil">
+          <div class="user-avatar-lg">{{ perfil.nombre?.charAt(0)?.toUpperCase() }}</div>
+          <div>
+            <h1>Mis Cursos</h1>
+            <p>Hola, <strong>{{ perfil.nombre }}</strong> — continúa tu aprendizaje</p>
+          </div>
+        </div>
+        <div *ngIf="!perfil">
+          <h1>Mis <span class="gradient-text">Cursos</span></h1>
+          <p>Tu espacio de aprendizaje personal</p>
+        </div>
+      </div>
+
+      <!-- Stat chip -->
+      <div class="stat-chip" *ngIf="!cargando">
+        <span class="stat-num">{{ totalCursos }}</span>
+        <span>curso{{ totalCursos !== 1 ? 's' : '' }} inscrito{{ totalCursos !== 1 ? 's' : '' }}</span>
+      </div>
+    </div>
+
+    <!-- Skeleton -->
+    <div class="cursos-grid" *ngIf="cargando">
+      <div class="skeleton-card" *ngFor="let i of [1,2,3]">
+        <div class="skeleton-img"></div>
+        <div class="skeleton-body">
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line medium"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="!cargando && cursos.length === 0" class="empty-state animate-fade-up">
+      <div class="empty-illustration">🎓</div>
+      <h2>Aún no tienes cursos</h2>
+      <p>Explora el catálogo y empieza a aprender hoy mismo.</p>
+      <a routerLink="/cursos" class="btn btn-primary btn-lg">Explorar cursos →</a>
+    </div>
+
+    <!-- Grid -->
+    <div class="cursos-grid animate-fade-up" *ngIf="!cargando && cursos.length > 0">
+      <article class="curso-card" *ngFor="let curso of cursos">
+
+        <div class="card-image">
+          <div class="card-icon-wrap">
+            <span class="card-icon">{{ getCourseIcon(curso.nombre) }}</span>
+          </div>
+          <span class="badge badge-primary modules-count">
+            {{ curso.modulos?.length || 0 }} módulos
+          </span>
+        </div>
+
+        <div class="card-body">
+          <h3>{{ curso.nombre }}</h3>
+          <p class="card-desc">{{ curso.descripcion | slice:0:90 }}{{ curso.descripcion?.length > 90 ? '...' : '' }}</p>
+
+          <div class="instructor-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span>{{ curso.instructor?.nombre || 'Instructor' }}</span>
+          </div>
+
+          <!-- Progress placeholder — se mejora en Fase 4 con datos de inscripción -->
+          <div class="card-footer">
+            <a [routerLink]="['/ver-curso', curso._id]" class="btn btn-primary">
+              Continuar →
+            </a>
+          </div>
+        </div>
+
+      </article>
+    </div>
+
+  </div>
+</div>
