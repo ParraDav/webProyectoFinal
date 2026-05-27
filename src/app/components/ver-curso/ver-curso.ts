@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CursoService } from '../../services/curso-service';
 import { AuthService } from '../../services/auth-service';
+import { UsuarioService } from '../../services/usuario-service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -48,6 +49,7 @@ export class VerCurso implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private cursoService: CursoService,
+    private usuarioService: UsuarioService,
     public auth: AuthService,
     private toastr: ToastrService
   ) {}
@@ -64,15 +66,45 @@ export class VerCurso implements OnInit {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    if (!id) return;
+    if (!id) {
+      this.cargando = false;
+      return;
+    }
     this.cargarCurso(id);
   }
 
   cargarCurso(id: string) {
     this.cargando = true;
     this.cursoService.getCursoPublico(id).subscribe({
-      next: (data) => { this.curso = data; this.cargando = false; },
-      error: () => { this.cargando = false; }
+      next: (data) => {
+        this.curso = data;
+        
+        // Si el usuario es un estudiante logueado, verificar si está inscrito
+        if (this.isLoggedIn && this.isEstudiante) {
+          this.usuarioService.misCursos().subscribe({
+            next: (cursosInscritos: any[]) => {
+              const cursoInscrito = cursosInscritos.find(c => c._id === this.curso._id);
+              if (cursoInscrito) {
+                this.inscrito = true;
+                this.modulosCompletados = cursoInscrito.modulosCompletados || [];
+              } else {
+                this.inscrito = false;
+                this.modulosCompletados = [];
+              }
+              this.cargando = false;
+            },
+            error: () => {
+              this.inscrito = false;
+              this.cargando = false;
+            }
+          });
+        } else {
+          this.cargando = false;
+        }
+      },
+      error: () => {
+        this.cargando = false;
+      }
     });
   }
 
