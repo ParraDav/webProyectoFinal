@@ -75,7 +75,11 @@ export class VerCurso implements OnInit {
 
   cargarCurso(id: string) {
     this.cargando = true;
-    this.cursoService.getCursoPublico(id).subscribe({
+    const req = this.isLoggedIn 
+      ? this.cursoService.getCurso(id) 
+      : this.cursoService.getCursoPublico(id);
+      
+    req.subscribe({
       next: (data) => {
         this.curso = data;
         

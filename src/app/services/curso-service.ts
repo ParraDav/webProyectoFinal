@@ -19,6 +19,10 @@ export class CursoService {
     return this.http.get<any>(`${this.apiUri}/publicos/${id}`);
   }
 
+  getCurso(id: string) {
+    return this.http.get<any>(`${this.apiUri}/${id}`);
+  }
+
   // ── Cursos (autenticado) ────────────────────────────────────────
 
   /**
