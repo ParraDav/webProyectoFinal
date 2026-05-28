@@ -106,10 +106,41 @@
               </button>
             </ng-container>
 
-            <div *ngIf="inscrito" class="enrolled-badge">
-              <span>✅ Estás inscrito</span>
+            <!-- Certificate actions for enrolled students -->
+            <div *ngIf="inscrito && isEstudiante" class="certificate-student-section">
+              <!-- Progress is 100% and not requested -->
+              <div *ngIf="progreso === 100 && estadoCertificado === 'no_solicitado'">
+                <p class="cert-congrats">🏆 ¡Felicidades! Has completado el curso al 100%.</p>
+                <button class="btn btn-primary btn-lg cert-btn" (click)="solicitarCertificado()" [disabled]="solicitandoCertificado">
+                  <span *ngIf="!solicitandoCertificado">🎓 Solicitar Certificado</span>
+                  <span *ngIf="solicitandoCertificado" class="spinner-wrap"><span class="spinner"></span> Procesando...</span>
+                </button>
+              </div>
+
+              <!-- Progress is 100% and requested / pending -->
+              <div *ngIf="estadoCertificado === 'solicitado'" class="cert-status-badge pending">
+                <span>⏳ Certificado solicitado (Pendiente de aprobación)</span>
+              </div>
+
+              <!-- Certificate approved! -->
+              <div *ngIf="estadoCertificado === 'aprobado'" class="cert-status-badge approved">
+                <span>🎓 ¡Certificado Aprobado!</span>
+                <div class="cert-download-wrap">
+                  <p class="cert-date">Aprobado el {{ fechaAprobacionCertificado | date:'dd/MM/yyyy' }}</p>
+                  <button class="btn btn-outline btn-sm print-cert-btn" onclick="window.print()">🖨️ Imprimir Certificado</button>
+                </div>
+              </div>
+
+              <!-- Progress is less than 100% -->
+              <div *ngIf="progreso < 100">
+                <div class="enrolled-badge">
+                  <span>✅ Estás inscrito</span>
+                </div>
+                <p class="cert-locked-desc">Completa todos los módulos ({{ progreso }}%) para desbloquear tu certificado.</p>
+              </div>
             </div>
 
+            <!-- Instructor indicator -->
             <div *ngIf="canManage" class="manage-hint">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16">
                 <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
@@ -302,10 +333,52 @@
           </div>
           <div class="inscritos-list">
             <div class="inscrito-item" *ngFor="let i of inscritos">
-              <div class="inscrito-avatar">{{ i.estudiante?.nombre?.charAt(0)?.toUpperCase() || '?' }}</div>
-              <div class="inscrito-info">
-                <strong>{{ i.estudiante?.nombre || 'Estudiante' }}</strong>
-                <span>{{ i.estudiante?.email }}</span>
+              <!-- Header: Avatar & Info -->
+              <div class="inscrito-header">
+                <div class="inscrito-avatar">{{ i.estudiante?.nombre?.charAt(0)?.toUpperCase() || '?' }}</div>
+                <div class="inscrito-info">
+                  <strong>{{ i.estudiante?.nombre || 'Estudiante' }}</strong>
+                  <span>{{ i.estudiante?.email }}</span>
+                </div>
+              </div>
+
+              <!-- Student Progress -->
+              <div class="inscrito-progress-section">
+                <div class="student-progress-info">
+                  <span>Avance: <strong>{{ calcularProgresoEstudiante(i) }}%</strong></span>
+                  <span class="modules-count">({{ i.modulosCompletados?.length || 0 }}/{{ curso.modulos?.length || 0 }} mód.)</span>
+                </div>
+                <div class="student-progress-bar-bg">
+                  <div class="student-progress-bar-fill" [style.width.%]="calcularProgresoEstudiante(i)"></div>
+                </div>
+              </div>
+
+              <!-- Certificate Status & Actions -->
+              <div class="inscrito-actions">
+                <span class="action-label">Certificado:</span>
+                
+                <!-- No solicitado -->
+                <span *ngIf="i.estadoCertificado === 'no_solicitado'" class="cert-badge no-solicitado">
+                  No solicitado
+                </span>
+                
+                <!-- Solicitado -->
+                <div *ngIf="i.estadoCertificado === 'solicitado'" class="cert-action-request">
+                  <button class="btn btn-primary btn-sm approve-cert-btn" 
+                    (click)="aprobarCertificado(i)" 
+                    [disabled]="aprobandoCertificadoId === i._id">
+                    <span *ngIf="aprobandoCertificadoId !== i._id">✓ Aprobar Certificado</span>
+                    <span *ngIf="aprobandoCertificadoId === i._id" class="spinner-wrap"><span class="spinner"></span> Aprobando...</span>
+                  </button>
+                </div>
+
+                <!-- Aprobado -->
+                <div *ngIf="i.estadoCertificado === 'aprobado'" class="cert-badge aprobado">
+                  <span>✓ Aprobado</span>
+                  <small *ngIf="i.fechaAprobacionCertificado" class="aprobado-date">
+                    ({{ i.fechaAprobacionCertificado | date:'dd/MM/yyyy' }})
+                  </small>
+                </div>
               </div>
             </div>
           </div>

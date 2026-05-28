@@ -24,6 +24,12 @@ export class VerCurso implements OnInit {
   // Progreso del estudiante
   modulosCompletados: string[] = [];
   completandoModulo: Record<string, boolean> = {};
+  estadoCertificado: string = 'no_solicitado';
+  fechaAprobacionCertificado: string | null = null;
+  solicitandoCertificado = false;
+
+  // ── Instructor/Admin — Certificados ──────────────────
+  aprobandoCertificadoId: string | null = null;
 
   // ── Instructor/Admin — Editar Curso ──────────────────
   editandoCurso = false;
@@ -64,6 +70,12 @@ export class VerCurso implements OnInit {
     return Math.round((this.modulosCompletados.length / this.curso.modulos.length) * 100);
   }
 
+  calcularProgresoEstudiante(inscrito: any): number {
+    if (!this.curso?.modulos?.length) return 0;
+    const completados = inscrito.modulosCompletados?.length || 0;
+    return Math.round((completados / this.curso.modulos.length) * 100);
+  }
+
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
@@ -91,9 +103,13 @@ export class VerCurso implements OnInit {
               if (cursoInscrito) {
                 this.inscrito = true;
                 this.modulosCompletados = cursoInscrito.modulosCompletados || [];
+                this.estadoCertificado = cursoInscrito.estadoCertificado || 'no_solicitado';
+                this.fechaAprobacionCertificado = cursoInscrito.fechaAprobacionCertificado || null;
               } else {
                 this.inscrito = false;
                 this.modulosCompletados = [];
+                this.estadoCertificado = 'no_solicitado';
+                this.fechaAprobacionCertificado = null;
               }
               this.cargando = false;
             },
@@ -275,6 +291,38 @@ export class VerCurso implements OnInit {
         this.cargandoInscritos = false;
         this.toastr.error(err?.error?.mensaje ?? 'Error al cargar inscritos', 'Error');
         this.mostrarInscritos = false;
+      }
+    });
+  }
+
+  // ── Certificados (Estudiante / Instructor) ───────────
+  solicitarCertificado() {
+    this.solicitandoCertificado = true;
+    this.cursoService.solicitarCertificado(this.curso._id).subscribe({
+      next: (res: any) => {
+        this.estadoCertificado = res.estadoCertificado;
+        this.solicitandoCertificado = false;
+        this.toastr.success('¡Certificado solicitado con éxito! Pendiente de aprobación.', 'Éxito');
+      },
+      error: (err) => {
+        this.solicitandoCertificado = false;
+        this.toastr.error(err?.error?.mensaje ?? 'Error al solicitar el certificado', 'Error');
+      }
+    });
+  }
+
+  aprobarCertificado(inscripcion: any) {
+    this.aprobandoCertificadoId = inscripcion._id;
+    this.cursoService.aprobarCertificado(this.curso._id, inscripcion._id).subscribe({
+      next: (res: any) => {
+        inscripcion.estadoCertificado = res.estadoCertificado;
+        inscripcion.fechaAprobacionCertificado = res.inscripcion.fechaAprobacionCertificado;
+        this.aprobandoCertificadoId = null;
+        this.toastr.success(`¡Certificado de ${inscripcion.estudiante?.nombre || 'estudiante'} aprobado con éxito!`, 'Aprobado');
+      },
+      error: (err) => {
+        this.aprobandoCertificadoId = null;
+        this.toastr.error(err?.error?.mensaje ?? 'Error al aprobar el certificado', 'Error');
       }
     });
   }

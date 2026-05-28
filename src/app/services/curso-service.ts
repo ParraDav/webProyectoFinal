@@ -108,4 +108,20 @@ export class CursoService {
   completarModulo(idCurso: string, idModulo: string) {
     return this.http.post<any>(`${this.apiUri}/${idCurso}/completar/${idModulo}`, {});
   }
+
+  /**
+   * POST /api/cursos/:id/solicitar-certificado
+   * Solicita el certificado para el estudiante logueado (debe tener el 100% completado).
+   */
+  solicitarCertificado(idCurso: string) {
+    return this.http.post<any>(`${this.apiUri}/${idCurso}/solicitar-certificado`, {});
+  }
+
+  /**
+   * POST /api/cursos/:id/aprobar-certificado/:idInscripcion
+   * Aprueba el certificado del estudiante. Solo instructor o administrador.
+   */
+  aprobarCertificado(idCurso: string, idInscripcion: string) {
+    return this.http.post<any>(`${this.apiUri}/${idCurso}/aprobar-certificado/${idInscripcion}`, {});
+  }
 }

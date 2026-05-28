@@ -368,7 +368,7 @@
 
 .modal-box {
   width: 100%;
-  max-width: 520px;
+  max-width: 600px;
   max-height: 80vh;
   display: flex;
   flex-direction: column;
@@ -409,12 +409,117 @@
 
 .modal-empty { text-align: center; padding: 32px; color: var(--text-muted); }
 
-.inscritos-list { display: flex; flex-direction: column; gap: 10px; }
+/* ── Student Certificate UI (inside enroll-card) ──────── */
+.certificate-student-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.cert-congrats {
+  font-size: 0.9rem;
+  color: var(--success);
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.cert-btn {
+  width: 100%;
+  justify-content: center;
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+  animation: pulse-glow 2.5s infinite;
+}
+
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.5); }
+  70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+}
+
+.cert-status-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.cert-status-badge.pending {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  color: #f59e0b;
+}
+
+.cert-status-badge.approved {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: var(--success);
+}
+
+.cert-download-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 6px;
+}
+
+.cert-date {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 0 !important;
+}
+
+.print-cert-btn {
+  width: 100%;
+  font-size: 0.8rem;
+  border-color: rgba(16, 185, 129, 0.3);
+  color: var(--success);
+}
+.print-cert-btn:hover {
+  background: var(--success);
+  color: #fff;
+  border-color: var(--success);
+}
+
+.cert-locked-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 10px;
+  line-height: 1.4;
+}
+
+/* ── Enrolled List (Instructor Modal) ─────────────────── */
+.inscritos-list { display: flex; flex-direction: column; gap: 12px; }
 .inscrito-item {
-  display: flex; align-items: center; gap: 12px;
-  padding: 12px 16px;
-  background: var(--bg-elevated);
-  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.inscrito-item:hover {
+  border-color: rgba(99, 102, 241, 0.25);
+  transform: translateY(-2px);
+}
+.inscrito-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 .inscrito-avatar {
   width: 36px; height: 36px;
@@ -427,6 +532,111 @@
 .inscrito-info { display: flex; flex-direction: column; gap: 2px; }
 .inscrito-info strong { font-size: 0.88rem; color: var(--text-primary); }
 .inscrito-info span { font-size: 0.75rem; color: var(--text-muted); }
+
+.inscrito-progress-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.student-progress-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.student-progress-info strong {
+  color: var(--text-primary);
+}
+
+.modules-count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.student-progress-bar-bg {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.student-progress-bar-fill {
+  height: 100%;
+  background: var(--brand-gradient);
+  border-radius: 99px;
+  transition: width 0.3s ease;
+}
+
+.inscrito-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.05);
+}
+
+.action-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.cert-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 99px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cert-badge.no-solicitado {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+}
+
+.cert-badge.aprobado {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  color: var(--success);
+  flex-direction: column;
+  align-items: flex-end;
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+
+.aprobado-date {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-weight: normal;
+  margin-top: 2px;
+}
+
+.cert-action-request {
+  display: flex;
+  align-items: center;
+}
+
+.approve-cert-btn {
+  background: var(--success) !important;
+  color: #fff !important;
+  border: none !important;
+  padding: 6px 12px !important;
+  font-size: 0.78rem !important;
+  border-radius: var(--radius-sm) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.approve-cert-btn:hover:not(:disabled) {
+  background: #0d9488 !important;
+  transform: translateY(-1px);
+}
 
 /* ── Responsive ──────────────────────────────────────── */
 @media (max-width: 900px) {
