@@ -1,0 +1,94 @@
+<div class="perfil-page">
+  <div class="container small-container">
+    
+    <!-- Header -->
+    <div class="page-header animate-fade-up">
+      <div>
+        <h1>Mi <span class="gradient-text">Perfil</span></h1>
+        <p>Gestiona tu información personal y contraseña</p>
+      </div>
+    </div>
+
+    <!-- Loading Orb -->
+    <div *ngIf="loading" class="loading-screen">
+      <div class="loader-orb"></div>
+      <p>Cargando información...</p>
+    </div>
+
+    <!-- Profile card -->
+    <div *ngIf="!loading" class="profile-card glass animate-fade-up">
+      
+      <!-- User badge header -->
+      <div class="profile-user-info">
+        <div class="profile-avatar">{{ perfilForm.get('nombre')?.value?.charAt(0)?.toUpperCase() }}</div>
+        <div>
+          <h3>{{ perfilForm.get('nombre')?.value }}</h3>
+          <span class="badge" [class.badge-primary]="rol === 'estudiante'" [class.badge-success]="rol === 'instructor'" [class.badge-danger]="rol === 'administrador'">
+            {{ rol }}
+          </span>
+        </div>
+      </div>
+
+      <form [formGroup]="perfilForm" (ngSubmit)="guardar()" class="profile-form">
+        
+        <!-- Nombre -->
+        <div class="field-group">
+          <label for="nombre">Nombre Completo</label>
+          <input
+            id="nombre"
+            type="text"
+            class="input-field"
+            formControlName="nombre"
+            placeholder="Ingresa tu nombre..."
+          />
+          <span class="error-msg" *ngIf="perfilForm.get('nombre')?.touched && perfilForm.get('nombre')?.invalid">
+            El nombre es obligatorio y debe tener al menos 3 caracteres
+          </span>
+        </div>
+
+        <!-- Email -->
+        <div class="field-group">
+          <label for="email">Correo Electrónico</label>
+          <input
+            id="email"
+            type="email"
+            class="input-field"
+            formControlName="email"
+            placeholder="correo@ejemplo.com"
+          />
+          <span class="error-msg" *ngIf="perfilForm.get('email')?.touched && perfilForm.get('email')?.invalid">
+            Ingresa un correo electrónico válido
+          </span>
+        </div>
+
+        <!-- Password (Optional) -->
+        <div class="field-group">
+          <label for="password">Nueva Contraseña (Opcional)</label>
+          <input
+            id="password"
+            type="password"
+            class="input-field"
+            formControlName="password"
+            placeholder="Dejar en blanco para no cambiar..."
+          />
+          <span class="error-msg" *ngIf="perfilForm.get('password')?.touched && perfilForm.get('password')?.invalid">
+            La contraseña debe tener al menos 6 caracteres
+          </span>
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" [disabled]="saving">
+            <span *ngIf="!saving">💾 Guardar cambios</span>
+            <span *ngIf="saving" class="spinner-wrap">
+              <span class="spinner"></span> Guardando...
+            </span>
+          </button>
+          <a routerLink="/" class="btn btn-outline">Cancelar</a>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+</div>

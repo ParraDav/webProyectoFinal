@@ -225,3 +225,274 @@ a:hover { color: var(--brand-primary); }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .animate-fade-up { animation: fadeUp 0.5s ease forwards; }
+
+/* Hide printable diploma on screen */
+#printable-diploma {
+  display: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PRINT STYLES - Diploma
+   ═══════════════════════════════════════════════════════ */
+@media print {
+  /* Reset body and hide all screen elements */
+  html, body {
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide all components except the printable diploma */
+  app-navbar, 
+  .navbar, 
+  .mobile-menu, 
+  .course-hero,
+  .course-layout,
+  footer, 
+  .toastr-container,
+  .loading-screen,
+  .modal-overlay {
+    display: none !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    visibility: hidden !important;
+  }
+
+  /* Show the printable diploma and make sure it has exact layout dimensions */
+  #printable-diploma {
+    display: flex !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: #ffffff !important;
+    padding: 15mm !important;
+    box-sizing: border-box !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 999999 !important;
+    visibility: visible !important;
+  }
+
+  #printable-diploma * {
+    visibility: visible !important;
+    color: #1a1a1a !important; /* Force all text to print dark */
+  }
+
+  .diploma-border-outer {
+    border: 8px double #d4af37 !important; /* Gold double border */
+    padding: 8px !important;
+    width: 100% !important;
+    height: 100% !important;
+    box-sizing: border-box !important;
+    background: #fafaf6 !important; /* Soft parchment cream color */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .diploma-border-inner {
+    border: 2px solid #b8972f !important;
+    padding: 25mm 15mm !important; /* Generous printing margins */
+    width: 100% !important;
+    height: 100% !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    text-align: center !important;
+    position: relative !important;
+  }
+
+  /* Vector graphics positioning */
+  .diploma-corner {
+    position: absolute !important;
+    width: 20mm !important;
+    height: 20mm !important;
+    z-index: 10 !important;
+    pointer-events: none !important;
+  }
+
+  .corner-tl { top: 8mm !important; left: 8mm !important; }
+  .corner-tr { top: 8mm !important; right: 8mm !important; }
+  .corner-bl { bottom: 8mm !important; left: 8mm !important; }
+  .corner-br { bottom: 8mm !important; right: 8mm !important; }
+
+  .diploma-watermark {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 80mm !important;
+    height: 80mm !important;
+    pointer-events: none !important;
+    z-index: 0 !important;
+  }
+
+  .diploma-emblem-wrap {
+    margin-top: 5mm !important;
+    z-index: 2 !important;
+  }
+
+  .diploma-emblem-svg {
+    width: 32mm !important;
+    height: 32mm !important;
+    filter: drop-shadow(0 4px 8px rgba(127, 100, 18, 0.35)) !important;
+  }
+
+  .diploma-academy-name {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 11pt !important;
+    font-weight: 700 !important;
+    letter-spacing: 5px !important;
+    color: #7f6412 !important;
+    margin-top: 8mm !important;
+    z-index: 2 !important;
+  }
+
+  .diploma-main-title {
+    font-family: 'Georgia', serif !important;
+    font-size: 26pt !important;
+    font-weight: 700 !important;
+    color: #1a1a1a !important;
+    letter-spacing: 2px !important;
+    margin-top: 8mm !important;
+    margin-bottom: 0 !important;
+    border-bottom: 2px solid rgba(212, 175, 55, 0.3) !important;
+    padding-bottom: 5mm !important;
+    width: 85% !important;
+    z-index: 2 !important;
+  }
+
+  .diploma-awarded-to {
+    font-family: 'Georgia', serif !important;
+    font-style: italic !important;
+    font-size: 14pt !important;
+    color: #555555 !important;
+    margin-top: 10mm !important;
+    margin-bottom: 0 !important;
+    z-index: 2 !important;
+  }
+
+  .diploma-student-name {
+    font-family: 'Georgia', serif !important;
+    font-size: 32pt !important;
+    font-weight: bold !important;
+    color: #7f6412 !important;
+    margin-top: 8mm !important;
+    margin-bottom: 0 !important;
+    z-index: 2 !important;
+  }
+
+  .diploma-for-completing {
+    font-family: 'Georgia', serif !important;
+    font-style: italic !important;
+    font-size: 14pt !important;
+    color: #555555 !important;
+    margin-top: 8mm !important;
+    margin-bottom: 0 !important;
+    z-index: 2 !important;
+  }
+
+  .diploma-course-name {
+    font-family: 'Georgia', serif !important;
+    font-size: 22pt !important;
+    font-weight: 700 !important;
+    color: #1a1a1a !important;
+    margin-top: 5mm !important;
+    margin-bottom: 0 !important;
+    line-height: 1.3 !important;
+    padding: 0 10px !important;
+    z-index: 2 !important;
+  }
+
+  .diploma-instructor-by {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 12pt !important;
+    color: #555555 !important;
+    margin-top: 8mm !important;
+    margin-bottom: 0 !important;
+    z-index: 2 !important;
+  }
+
+  .diploma-signatures-section {
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: flex-end !important;
+    width: 100% !important;
+    margin-top: auto !important;
+    margin-bottom: 10mm !important;
+    padding: 0 20mm !important;
+    box-sizing: border-box !important;
+    z-index: 2 !important;
+  }
+
+  .diploma-sig-box {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 40% !important;
+  }
+
+  .sig-line {
+    width: 100% !important;
+    height: 1px !important;
+    background: #888888 !important;
+    margin-bottom: 8px !important;
+  }
+
+  .sig-line.brand-signature {
+    font-family: 'Georgia', serif !important;
+    font-style: italic !important;
+    font-weight: bold !important;
+    font-size: 16pt !important;
+    color: #7f6412 !important;
+    background: none !important;
+    border-bottom: 1px solid #888888 !important;
+    height: auto !important;
+    width: 100% !important;
+    padding-bottom: 2px !important;
+    line-height: 1 !important;
+    text-align: center !important;
+  }
+
+  .sig-name {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 10pt !important;
+    font-weight: 600 !important;
+    color: #1a1a1a !important;
+  }
+
+  .sig-title {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 9pt !important;
+    color: #777777 !important;
+    margin-top: 2px !important;
+  }
+
+  .diploma-footer-details {
+    display: flex !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    margin-top: auto !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 9pt !important;
+    color: #666666 !important;
+    border-top: 1px solid rgba(0,0,0,0.06) !important;
+    padding-top: 5mm !important;
+    z-index: 2 !important;
+  }
+
+  @page {
+    size: portrait;
+    margin: 0;
+  }
+}

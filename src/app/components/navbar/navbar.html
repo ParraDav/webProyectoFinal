@@ -20,6 +20,9 @@
 
       <!-- Solo Admin -->
       <a *ngIf="isAdmin" routerLink="/admin-usuarios" routerLinkActive="active">Usuarios</a>
+
+      <!-- Perfil (Cualquier usuario logueado) -->
+      <a *ngIf="isLoggedIn" routerLink="/perfil" routerLinkActive="active">Perfil</a>
     </div>
 
     <!-- Auth section desktop -->
@@ -59,6 +62,7 @@
     <a *ngIf="isEstudiante" routerLink="/mis-cursos" (click)="closeMenu()">Mis Cursos</a>
     <a *ngIf="isInstructor || isAdmin" routerLink="/metricas" (click)="closeMenu()">Métricas</a>
     <a *ngIf="isAdmin" routerLink="/admin-usuarios" (click)="closeMenu()">Usuarios</a>
+    <a *ngIf="isLoggedIn" routerLink="/perfil" (click)="closeMenu()">Mi Perfil</a>
 
     <div class="mobile-auth">
       <ng-container *ngIf="!isLoggedIn; else mobileLoggedIn">

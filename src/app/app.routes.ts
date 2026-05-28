@@ -9,6 +9,7 @@ import { MisCursos } from './components/mis-cursos/mis-cursos';
 import { Metricas } from './components/metricas/metricas';
 import { AdminUsuarios } from './components/admin-usuarios/admin-usuarios';
 import { CrearCurso } from './components/crear-curso/crear-curso';
+import { Perfil } from './components/perfil/perfil';
 
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
@@ -67,6 +68,12 @@ export const routes: Routes = [
         component: AdminUsuarios,
         canActivate: [authGuard, roleGuard],
         data: { roles: ['administrador'] }
+    },
+
+    {
+        path: 'perfil',
+        component: Perfil,
+        canActivate: [authGuard]
     },
 
     {

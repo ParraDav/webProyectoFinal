@@ -380,11 +380,106 @@
                   </small>
                 </div>
               </div>
-            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
+</div> <!-- Closing ver-curso-page -->
+
+<!-- ══ DIPLOMA IMPRIMIBLE ══════════════════════════════ -->
+<div id="printable-diploma" *ngIf="inscrito && estadoCertificado === 'aprobado'">
+  <div class="diploma-border-outer">
+    <div class="diploma-border-inner">
+      
+      <!-- Corner Ornaments -->
+      <svg class="diploma-corner corner-tl" viewBox="0 0 100 100" width="70" height="70">
+        <path d="M0,0 L100,0 L100,6 L6,6 L6,100 L0,100 Z" fill="#7f6412" />
+        <path d="M12,12 L80,12 L80,15 L15,15 L15,80 L12,80 Z" fill="#d4af37" />
+        <circle cx="20" cy="20" r="4" fill="#d4af37" />
+      </svg>
+      <svg class="diploma-corner corner-tr" viewBox="0 0 100 100" width="70" height="70">
+        <path d="M100,0 L0,0 L0,6 L94,6 L94,100 L100,100 Z" fill="#7f6412" />
+        <path d="M88,12 L20,12 L20,15 L85,15 L85,80 L88,80 Z" fill="#d4af37" />
+        <circle cx="80" cy="20" r="4" fill="#d4af37" />
+      </svg>
+      <svg class="diploma-corner corner-bl" viewBox="0 0 100 100" width="70" height="70">
+        <path d="M0,100 L100,100 L100,94 L6,94 L6,0 L0,0 Z" fill="#7f6412" />
+        <path d="M12,88 L80,88 L80,85 L15,85 L15,20 L12,20 Z" fill="#d4af37" />
+        <circle cx="20" cy="80" r="4" fill="#d4af37" />
+      </svg>
+      <svg class="diploma-corner corner-br" viewBox="0 0 100 100" width="70" height="70">
+        <path d="M100,100 L0,100 L0,94 L94,94 L94,0 L100,0 Z" fill="#7f6412" />
+        <path d="M88,88 L20,88 L20,85 L85,85 L85,20 L88,20 Z" fill="#d4af37" />
+        <circle cx="80" cy="80" r="4" fill="#d4af37" />
+      </svg>
+
+      <!-- Watermark -->
+      <svg class="diploma-watermark" viewBox="0 0 100 100" width="280" height="280">
+        <polygon points="50,5 90,25 90,75 50,95 10,75 10,25" fill="none" stroke="#d4af37" stroke-width="1.5" stroke-opacity="0.1" />
+        <circle cx="50" cy="50" r="28" fill="none" stroke="#d4af37" stroke-width="0.8" stroke-opacity="0.08" />
+        <path d="M35,45 L50,30 L65,45 L50,60 Z" fill="#d4af37" fill-opacity="0.08" />
+        <path d="M50,60 L50,80" stroke="#d4af37" stroke-width="1.5" stroke-opacity="0.1" />
+      </svg>
+
+      <!-- Emblem -->
+      <div class="diploma-emblem-wrap">
+        <svg class="diploma-emblem-svg" viewBox="0 0 100 100" width="90" height="90">
+          <defs>
+            <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f5e4a8" />
+              <stop offset="50%" stop-color="#d4af37" />
+              <stop offset="100%" stop-color="#9a7f28" />
+            </linearGradient>
+          </defs>
+          <path d="M35,58 L23,95 L40,87 L50,95 L40,58 Z" fill="#c23b3b" />
+          <path d="M65,58 L77,95 L60,87 L50,95 L60,58 Z" fill="#9e2323" />
+          <polygon points="50,15 54,23 63,20 64,29 73,28 71,37 79,39 74,47 80,51 73,56 77,65 68,66 70,75 61,74 60,83 51,80 50,89 42,83 40,89 31,83 30,74 21,75 23,66 14,65 18,56 11,51 17,47 12,39 20,37 18,28 27,29 28,20 37,23 38,15 46,20" fill="url(#goldGrad)" stroke="#7f6412" stroke-width="1" />
+          <circle cx="50" cy="50" r="26" fill="#d4af37" stroke="#7f6412" stroke-width="2" />
+          <circle cx="50" cy="50" r="22" fill="none" stroke="#fff" stroke-width="1.5" stroke-dasharray="3,3" />
+          <polygon points="50,38 54,46 63,46 56,51 59,60 50,54 41,60 44,51 37,46 46,46" fill="#fff" />
+        </svg>
+      </div>
+      
+      <div class="diploma-academy-name">SKILLIA ACADEMY</div>
+      
+      <h1 class="diploma-main-title">DIPLOMA DE LOGRO</h1>
+      
+      <p class="diploma-awarded-to">Este diploma se otorga con orgullo a:</p>
+      
+      <h2 class="diploma-student-name">{{ perfilUsuario?.nombre || 'Estudiante' }}</h2>
+      
+      <p class="diploma-for-completing">Por haber completado y aprobado con éxito el curso virtual:</p>
+      
+      <h3 class="diploma-course-name">“{{ curso.nombre }}”</h3>
+      
+      <p class="diploma-instructor-by">
+        Bajo la tutoría del instructor <strong>{{ curso.instructor?.nombre || 'Instructor' }}</strong>
+      </p>
+
+      <div class="diploma-signatures-section">
+        <div class="diploma-sig-box">
+          <div class="sig-line"></div>
+          <span class="sig-name">{{ curso.instructor?.nombre || 'Instructor' }}</span>
+          <span class="sig-title">Instructor del Curso</span>
+        </div>
+        <div class="diploma-sig-box">
+          <div class="sig-line brand-signature">Skillia</div>
+          <span class="sig-name">Skillia Certification</span>
+          <span class="sig-title">Plataforma Educativa</span>
+        </div>
+      </div>
+
+      <div class="diploma-footer-details">
+        <div class="diploma-date-issued">
+          Fecha de Aprobación: <strong>{{ fechaAprobacionCertificado | date:'dd/MM/yyyy' }}</strong>
+        </div>
+        <div class="diploma-verify-code">
+          ID de Verificación: <code>{{ curso._id | slice:18:24 }}-{{ perfilUsuario?._id ? (perfilUsuario._id | slice:18:24) : '000000' }}</code>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>

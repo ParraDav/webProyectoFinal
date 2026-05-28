@@ -19,6 +19,14 @@ export class UsuarioService {
   }
 
   /**
+   * PUT /api/usuarios/perfil
+   * Actualiza el perfil del usuario autenticado.
+   */
+  actualizarPerfil(data: any) {
+    return this.http.put<any>(`${this.apiUrl}/perfil`, data);
+  }
+
+  /**
    * GET /api/usuarios/mis-cursos
    * Obtiene los cursos en los que el estudiante autenticado está inscrito.
    */

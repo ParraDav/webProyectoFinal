@@ -37,6 +37,16 @@ export class Cursos implements OnInit, OnDestroy {
   get isAdmin()      { return this.rol === 'administrador'; }
   get canManage()    { return this.isInstructor || this.isAdmin; }
 
+  esDuenio(curso: any): boolean {
+    if (this.isAdmin) return true;
+    if (this.isInstructor) {
+      const userId = this.auth.getUserId();
+      const instructorId = curso.instructor?._id || curso.instructor;
+      return userId === instructorId;
+    }
+    return false;
+  }
+
   private iconMap: Record<string, string> = {
     react: '⚛️', angular: '🅰️', node: '🟢', python: '🐍',
     javascript: '🟨', css: '🎨', html: '🌐', java: '☕',

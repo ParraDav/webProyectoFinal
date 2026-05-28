@@ -17,6 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 export class VerCurso implements OnInit {
 
   curso: any = null;
+  perfilUsuario: any = null;
   cargando = true;
   inscribiendo = false;
   inscrito = false;
@@ -63,7 +64,15 @@ export class VerCurso implements OnInit {
   get isLoggedIn()   { return this.auth.isLoggedIn(); }
   get rol()          { return this.auth.getRol(); }
   get isEstudiante() { return this.rol === 'estudiante'; }
-  get canManage()    { return this.rol === 'instructor' || this.rol === 'administrador'; }
+  get canManage(): boolean {
+    if (this.rol === 'administrador') return true;
+    if (this.rol === 'instructor') {
+      const currentUserId = this.auth.getUserId();
+      const instructorId = this.curso?.instructor?._id || this.curso?.instructor;
+      return currentUserId === instructorId;
+    }
+    return false;
+  }
 
   get progreso(): number {
     if (!this.curso?.modulos?.length) return 0;
@@ -97,6 +106,13 @@ export class VerCurso implements OnInit {
         
         // Si el usuario es un estudiante logueado, verificar si está inscrito
         if (this.isLoggedIn && this.isEstudiante) {
+          this.usuarioService.obtenerPerfil().subscribe({
+            next: (perf) => {
+              this.perfilUsuario = perf;
+            },
+            error: () => {}
+          });
+
           this.usuarioService.misCursos().subscribe({
             next: (cursosInscritos: any[]) => {
               const cursoInscrito = cursosInscritos.find(c => c._id === this.curso._id);

@@ -46,8 +46,20 @@ export class AuthService {
   }
 
   getRol() {
-
     return localStorage.getItem('rol');
+  }
+
+  getUserId(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      const payloadBase64 = token.split('.')[1];
+      const payloadJson = atob(payloadBase64);
+      const payload = JSON.parse(payloadJson);
+      return payload.id || null;
+    } catch (e) {
+      return null;
+    }
   }
 
   isLoggedIn(): boolean {
