@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { UsuarioService } from '../../services/usuario-service';
 import { AuthService } from '../../services/auth-service';
 import { ToastrService } from 'ngx-toastr';
@@ -24,7 +24,8 @@ export class Perfil implements OnInit {
     private fb: FormBuilder,
     private usuarioService: UsuarioService,
     private auth: AuthService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {
     this.perfilForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
@@ -40,17 +41,23 @@ export class Perfil implements OnInit {
 
   cargarPerfil() {
     this.loading = true;
+    console.log('obtenerPerfil() - Iniciando petición...');
     this.usuarioService.obtenerPerfil().subscribe({
       next: (data) => {
+        console.log('obtenerPerfil() - Datos recibidos con éxito:', data);
         this.perfilForm.patchValue({
           nombre: data.nombre,
           email: data.email
         });
+        console.log('obtenerPerfil() - Formulario actualizado:', this.perfilForm.value);
         this.loading = false;
       },
       error: (err) => {
+        console.error('obtenerPerfil() - Error en la petición:', err);
         this.loading = false;
-        this.toastr.error('Error al cargar la información del perfil', 'Error');
+        this.toastr.error('Tu sesión ha expirado o el usuario no existe. Inicia sesión de nuevo.', 'Error');
+        this.auth.logout();
+        this.router.navigate(['/login']);
       }
     });
   }

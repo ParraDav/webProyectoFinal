@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { CursoService } from '../../services/curso-service';
 import { AuthService } from '../../services/auth-service';
+import { UsuarioService } from '../../services/usuario-service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -21,13 +22,15 @@ export class Cursos implements OnInit, OnDestroy {
   cargando = true;
   searchTerm = '';
   inscribiendo: Record<string, boolean> = {};
+  misCursosIds = new Set<string>();
 
   private search$ = new Subject<string>();
 
   constructor(
     private cursoService: CursoService,
     private auth: AuthService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private usuarioService: UsuarioService
   ) {}
 
   get isLoggedIn()   { return this.auth.isLoggedIn(); }
@@ -57,6 +60,7 @@ export class Cursos implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.obtenerCursos();
+    this.cargarMisCursos();
 
     // Debounce de búsqueda — 400ms
     this.search$.pipe(
@@ -80,6 +84,21 @@ export class Cursos implements OnInit, OnDestroy {
     });
   }
 
+  cargarMisCursos() {
+    if (this.isLoggedIn && this.isEstudiante) {
+      this.usuarioService.misCursos().subscribe({
+        next: (res: any[]) => {
+          this.misCursosIds = new Set(res.map(c => c._id));
+        },
+        error: () => {}
+      });
+    }
+  }
+
+  estaInscrito(cursoId: string): boolean {
+    return this.misCursosIds.has(cursoId);
+  }
+
   onSearch() { this.search$.next(this.searchTerm); }
 
   clearSearch() { this.searchTerm = ''; this.obtenerCursos(); }
@@ -94,6 +113,7 @@ export class Cursos implements OnInit, OnDestroy {
       next: () => {
         this.toastr.success(`¡Te inscribiste en "${curso.nombre}"!`, 'Inscripción exitosa');
         this.inscribiendo[curso._id] = false;
+        this.misCursosIds.add(curso._id);
       },
       error: (err) => {
         const msg = err?.error?.mensaje ?? 'Error al inscribirse';

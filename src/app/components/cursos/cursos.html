@@ -110,16 +110,23 @@
 
             <!-- Estudiante -->
             <ng-container *ngIf="isEstudiante">
-              <button
-                class="btn btn-primary"
-                (click)="inscribirse(curso)"
-                [disabled]="inscribiendo[curso._id]">
-                <span *ngIf="!inscribiendo[curso._id]">Inscribirse</span>
-                <span *ngIf="inscribiendo[curso._id]" class="spinner-wrap">
-                  <span class="spinner"></span>
-                </span>
-              </button>
-              <a [routerLink]="['/ver-curso', curso._id]" class="btn btn-outline">Ver más</a>
+              <!-- Ya inscrito -->
+              <ng-container *ngIf="estaInscrito(curso._id); else noInscrito">
+                <a [routerLink]="['/ver-curso', curso._id]" class="btn btn-primary">Ir al curso →</a>
+              </ng-container>
+              <!-- No inscrito -->
+              <ng-template #noInscrito>
+                <button
+                  class="btn btn-primary"
+                  (click)="inscribirse(curso)"
+                  [disabled]="inscribiendo[curso._id]">
+                  <span *ngIf="!inscribiendo[curso._id]">Inscribirse</span>
+                  <span *ngIf="inscribiendo[curso._id]" class="spinner-wrap">
+                    <span class="spinner"></span>
+                  </span>
+                </button>
+                <a [routerLink]="['/ver-curso', curso._id]" class="btn btn-outline">Ver más</a>
+              </ng-template>
             </ng-container>
 
             <!-- Instructor o Admin -->
